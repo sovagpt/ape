@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APE - Automated Portfolio Engineer</title>
+    <style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Courier New', monospace;
+    background: #0a0e27;
+    color: #00ff88;
+    overflow-x: hidden;
+}
+
+/* Ticker Bar */
+.ticker-bar {
+    background: #0d1229;
+    border-bottom: 1px solid #1a2847;
+    padding: 10px 0;
+    overflow: hidden;
+}
+
+.ticker-content {
+    display: flex;
+    gap: 40px;
+    animation: scroll 30s linear infinite;
+    white-space: nowrap;
+}
+
+@keyframes scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+.ticker-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+}
+
+.ticker-item.positive { color: #00ff88; }
+.ticker-item.negative { color: #ff4466; }
+
+/* Header */
+header {
+    background: #0d1229;
+    border-bottom: 1px solid #1a2847;
+    padding: 20px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.header-left h1 {
+    font-size: 32px;
+    color: #00ff88;
+    letter-spacing: 2px;
+}
+
+.status-badge {
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.status-badge.live {
+    background: #00ff88;
+    color: #0a0e27;
+}
+
+.status-badge.active {
+    background: #00ff8833;
+    color: #00ff88;
+    border: 1px solid #00ff88;
+}
+
+.status-badge.online {
+    background: #00ff88;
+    color: #0a0e27;
+    font-size: 11px;
+}
+
+.timer {
+    color: #6b7c9e;
+    font-size: 14px;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.icon-btn {
+    background: transparent;
+    border: 1px solid #1a2847;
+    color: #6b7c9e;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.icon-btn:hover {
+    border-color: #00ff88;
+    color: #00ff88;
+}
+
+.wallet-address {
+    background: #1a2847;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 12px;
+    color: #6b7c9e;
+}
+
+.api-status {
+    color: #6b7c9e;
+    font-size: 12px;
+}
+
+.refresh-btn {
+    background: #1a5fb4;
+    border: none;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: bold;
+}
+
+.refresh-btn:hover {
+    background: #2779d9;
+}
+
+/* Main Container */
+.container {
+    display: grid;
+    grid-template-columns: 400px 1fr;
+    gap: 20px;
+    padding: 20px 40px;
+    max-width: 1800px;
+    margin: 0 auto;
+}
+
+/* Left Panel */
+.left-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.monitor-card {
+    background: #0d1229;
+    border: 1px solid #1a2847;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #1a2847;
+}
+
+.card-header h3 {
+    color: #00ff88;
+    font-size: 14px;
+    letter-spacing: 1px;
+}
+
+.ape-profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.ape-avatar {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    border: 3px solid #00ff88;
+    object-fit: cover;
+}
+
+.ape-stats {
+    width: 100%;
+}
+
+.stat-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid #1a2847;
+    font-size: 14px;
+}
+
+.stat-row span:first-child {
+    color: #6b7c9e;
+}
+
+.stat-row span:last-child {
+    color: #00ff88;
+    font-weight: bold;
+}
+
+/* Right Panel */
+.right-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.stat-card {
+    background: #0d1229;
+    border: 1px solid #1a2847;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.stat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    font-size: 12px;
+    color: #6b7c9e;
+}
+
+.stat-icon {
+    font-size: 20px;
+}
+
+.stat-value {
+    font-size: 28px;
+    color: #00ff88;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.stat-subtext {
+    font-size: 12px;
+    color: #6b7c9e;
+}
+
+.positions-card, .transactions-card {
+    background: #0d1229;
+    border: 1px solid #1a2847;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+thead {
+    border-bottom: 1px solid #1a2847;
+}
+
+th {
+    text-align: left;
+    padding: 12px;
+    font-size: 12px;
+    color: #6b7c9e;
+    font-weight: normal;
+}
+
+td {
+    padding: 12px;
+    font-size: 14px;
+    border-bottom: 1px solid #1a2847;
+}
+
+.no-data {
+    text-align: center;
+    color: #6b7c9e;
+    padding: 30px !important;
+}
+
+.type-badge {
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.type-badge.buy {
+    background: #00ff8833;
+    color: #00ff88;
+}
+
+.type-badge.sell {
+    background: #ff446633;
+    color: #ff4466;
+}
+
+.tx-link {
+    color: #1a5fb4;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.tx-link:hover {
+    color: #2779d9;
+    text-decoration: underline;
+}
+
+.pnl-positive {
+    color: #00ff88;
+}
+
+.pnl-negative {
+    color: #ff4466;
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-content {
+    background: #0d1229;
+    border: 1px solid #1a2847;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid #1a2847;
+}
+
+.modal-header h2 {
+    color: #00ff88;
+    font-size: 18px;
+}
+
+.close-btn {
+    background: transparent;
+    border: none;
+    color: #6b7c9e;
+    font-size: 28px;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.close-btn:hover {
+    color: #00ff88;
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    color: #6b7c9e;
+    font-size: 12px;
+    margin-bottom: 8px;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    background: #1a2847;
+    border: 1px solid #2d3a5c;
+    color: #00ff88;
+    padding: 12px;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #00ff88;
+}
+
+.submit-btn {
+    width: 100%;
+    background: #00ff88;
+    border: none;
+    color: #0a0e27;
+    padding: 14px;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 16px;
+}
+
+.submit-btn:hover {
+    background: #00dd77;
+}
+
+/* Responsive */
+@media (max-width: 1400px) {
+    .container {
+        grid-template-columns: 350px 1fr;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        grid-template-columns: 1fr;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    header {
+        flex-direction: column;
+        gap: 15px;
+    }
+}
+    </style>
+</head>
+<body>
+    <div class="ticker-bar">
+        <div class="ticker-content" id="tickerContent"></div>
+    </div>
+
+    <header>
+        <div class="header-left">
+            <h1>APE</h1>
+            <span class="status-badge live">LIVE</span>
+            <span class="timer" id="timer">00:00:00</span>
+        </div>
+        <div class="header-right">
+            <button class="icon-btn" id="settingsBtn">⚙</button>
+            <button class="icon-btn" id="chartBtn">📊</button>
+            <span class="wallet-address" id="walletAddress">Loading...</span>
+            <span class="api-status">API Status</span>
+            <button class="refresh-btn" id="refreshBtn">🔄 REFRESH</button>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="left-panel">
+            <div class="monitor-card">
+                <div class="card-header">
+                    <h3>APE MONITOR</h3>
+                    <span class="status-badge active">ACTIVE</span>
+                </div>
+                <div class="ape-profile">
+                    <img src="https://cdn.prod.website-files.com/674396c59212c6ea348b24e0/68feb0cc801d4600ed60360c_c.jpg" alt="APE" class="ape-avatar">
+                    <div class="ape-stats">
+                        <div class="stat-row">
+                            <span>Monitoring:</span>
+                            <span id="totalTrades">0 Trades</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Active Positions:</span>
+                            <span id="activePositions">0</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Status:</span>
+                            <span class="status-badge online">ONLINE</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Last Update:</span>
+                            <span id="lastUpdate">--:--:--</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="right-panel">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span>PORTFOLIO VALUE</span>
+                        <span class="stat-icon">💰</span>
+                    </div>
+                    <div class="stat-value" id="portfolioValue">$0.00</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span>WIN RATE</span>
+                        <span class="stat-icon">📊</span>
+                    </div>
+                    <div class="stat-value" id="winRate">0%</div>
+                    <div class="stat-subtext" id="winRateText">0 Total Trades</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span>24H VOLUME</span>
+                        <span class="stat-icon">📈</span>
+                    </div>
+                    <div class="stat-value" id="volume24h">$0.00</div>
+                    <div class="stat-subtext" id="trades24h">0 Trades Today</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span>SOL BALANCE</span>
+                        <span class="stat-icon">🌐</span>
+                    </div>
+                    <div class="stat-value" id="solBalance">0 SOL</div>
+                    <div class="stat-subtext">Available Liquidity</div>
+                </div>
+            </div>
+
+            <div class="positions-card">
+                <div class="card-header">
+                    <h3>ACTIVE POSITIONS</h3>
+                    <span id="holdingsCount">0 Holdings</span>
+                </div>
+                <table class="positions-table">
+                    <thead>
+                        <tr>
+                            <th>Symbol</th>
+                            <th>Amount</th>
+                            <th>Live Value</th>
+                            <th>P&L</th>
+                        </tr>
+                    </thead>
+                    <tbody id="positionsBody">
+                        <tr>
+                            <td colspan="4" class="no-data">No active positions</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="transactions-card">
+                <div class="card-header">
+                    <h3>RECENT TRANSACTIONS</h3>
+                    <span id="totalTransactions">0 Total</span>
+                </div>
+                <table class="transactions-table">
+                    <thead>
+                        <tr>
+                            <th>TIME</th>
+                            <th>TYPE</th>
+                            <th>FROM</th>
+                            <th>TO</th>
+                            <th>VALUE</th>
+                            <th>TX</th>
+                        </tr>
+                    </thead>
+                    <tbody id="transactionsBody">
+                        <tr>
+                            <td colspan="6" class="no-data">No transactions yet</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Admin Panel Modal -->
+    <div class="modal" id="adminModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Admin Panel - Add Trade</h2>
+                <button class="close-btn" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="tradeForm">
+                    <div class="form-group">
+                        <label>Trade Type</label>
+                        <select id="tradeType" required>
+                            <option value="BUY">BUY</option>
+                            <option value="SELL">SELL</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Token Symbol</label>
+                        <input type="text" id="tokenSymbol" placeholder="e.g., BONK" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Token Address</label>
+                        <input type="text" id="tokenAddress" placeholder="Solana token address" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Amount</label>
+                        <input type="number" id="amount" step="0.000001" placeholder="0.00" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Price per Token (USD)</label>
+                        <input type="number" id="pricePerToken" step="0.000001" placeholder="0.00" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Transaction Hash</label>
+                        <input type="text" id="txHash" placeholder="Solana transaction hash" required>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Add Trade</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+// Firebase Configuration
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
+import { getFirestore, collection, addDoc, getDocs, query, orderBy, limit, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+
+// Initialize Firebase
+const firebaseConfig = {
+    apiKey: "AIzaSyCS3qi9luuIr7WmghMfRXTIxprT4m2v8sQ",
+    authDomain: "apee-15ea0.firebaseapp.com",
+    projectId: "apee-15ea0",
+    storageBucket: "apee-15ea0.firebasestorage.app",
+    messagingSenderId: "138789462447",
+    appId: "1:138789462447:web:67cf87ffce73d845e90f5a",
+    measurementId: "G-S6B3K5GGM2"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// State
+let trades = [];
+let positions = {};
+let tokenPrices = {};
+let solPrice = 0;
+
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
+    initializeApp();
+    setupEventListeners();
+    startTimer();
+    loadData();
+    updatePricesLoop();
+});
+
+function initializeApp() {
+    console.log('APE Trading Bot Initialized');
+}
+
+function setupEventListeners() {
+    // Settings button opens admin panel
+    document.getElementById('settingsBtn').addEventListener('click', openAdminPanel);
+    document.getElementById('closeModal').addEventListener('click', closeAdminPanel);
+    
+    // Refresh button
+    document.getElementById('refreshBtn').addEventListener('click', () => {
+        loadData();
+        updatePrices();
+    });
+    
+    // Trade form submission
+    document.getElementById('tradeForm').addEventListener('submit', handleTradeSubmit);
+    
+    // Close modal on outside click
+    document.getElementById('adminModal').addEventListener('click', (e) => {
+        if (e.target.id === 'adminModal') {
+            closeAdminPanel();
+        }
+    });
+}
+
+// Timer
+function startTimer() {
+    const startTime = Date.now();
+    setInterval(() => {
+        const elapsed = Date.now() - startTime;
+        const hours = Math.floor(elapsed / 3600000);
+        const minutes = Math.floor((elapsed % 3600000) / 60000);
+        const seconds = Math.floor((elapsed % 60000) / 1000);
+        document.getElementById('timer').textContent = 
+            `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    }, 1000);
+}
+
+// Admin Panel
+function openAdminPanel() {
+    document.getElementById('adminModal').classList.add('active');
+}
+
+function closeAdminPanel() {
+    document.getElementById('adminModal').classList.remove('active');
+    document.getElementById('tradeForm').reset();
+}
+
+async function handleTradeSubmit(e) {
+    e.preventDefault();
+    
+    const trade = {
+        type: document.getElementById('tradeType').value,
+        symbol: document.getElementById('tokenSymbol').value.toUpperCase(),
+        tokenAddress: document.getElementById('tokenAddress').value,
+        amount: parseFloat(document.getElementById('amount').value),
+        pricePerToken: parseFloat(document.getElementById('pricePerToken').value),
+        txHash: document.getElementById('txHash').value,
+        timestamp: Date.now(),
+        value: parseFloat(document.getElementById('amount').value) * parseFloat(document.getElementById('pricePerToken').value)
+    };
+    
+    try {
+        await addDoc(collection(db, 'trades'), trade);
+        console.log('Trade added successfully');
+        closeAdminPanel();
+        loadData();
+    } catch (error) {
+        console.error('Error adding trade:', error);
+        alert('Error adding trade: ' + error.message);
+    }
+}
+
+// Load Data from Firebase
+async function loadData() {
+    try {
+        const tradesQuery = query(collection(db, 'trades'), orderBy('timestamp', 'desc'));
+        const snapshot = await getDocs(tradesQuery);
+        
+        trades = [];
+        snapshot.forEach((doc) => {
+            trades.push({ id: doc.id, ...doc.data() });
+        });
+        
+        calculatePositions();
+        updateUI();
+    } catch (error) {
+        console.error('Error loading data:', error);
+    }
+}
+
+// Calculate current positions from trades
+function calculatePositions() {
+    positions = {};
+    
+    trades.forEach(trade => {
+        if (!positions[trade.symbol]) {
+            positions[trade.symbol] = {
+                symbol: trade.symbol,
+                tokenAddress: trade.tokenAddress,
+                amount: 0,
+                totalCost: 0,
+                avgBuyPrice: 0
+            };
+        }
+        
+        if (trade.type === 'BUY') {
+            positions[trade.symbol].amount += trade.amount;
+            positions[trade.symbol].totalCost += trade.value;
+        } else if (trade.type === 'SELL') {
+            positions[trade.symbol].amount -= trade.amount;
+            positions[trade.symbol].totalCost -= trade.value;
+        }
+        
+        if (positions[trade.symbol].amount > 0) {
+            positions[trade.symbol].avgBuyPrice = positions[trade.symbol].totalCost / positions[trade.symbol].amount;
+        }
+    });
+    
+    // Remove positions with 0 or negative amounts
+    Object.keys(positions).forEach(symbol => {
+        if (positions[symbol].amount <= 0) {
+            delete positions[symbol];
+        }
+    });
+}
+
+// Update UI
+function updateUI() {
+    updateStats();
+    updatePositionsTable();
+    updateTransactionsTable();
+    updateTicker();
+    updateLastUpdate();
+}
+
+function updateStats() {
+    // Calculate portfolio value
+    let portfolioValue = 0;
+    Object.values(positions).forEach(pos => {
+        const price = tokenPrices[pos.tokenAddress] || pos.avgBuyPrice;
+        portfolioValue += pos.amount * price;
+    });
+    
+    // Calculate win rate
+    const completedTrades = calculateCompletedTrades();
+    const wins = completedTrades.filter(t => t.profit > 0).length;
+    const winRate = completedTrades.length > 0 ? (wins / completedTrades.length * 100).toFixed(0) : 0;
+    
+    // Calculate 24h volume
+    const oneDayAgo = Date.now() - 86400000;
+    const trades24h = trades.filter(t => t.timestamp > oneDayAgo);
+    const volume24h = trades24h.reduce((sum, t) => sum + t.value, 0);
+    
+    // Calculate SOL balance (this would come from actual wallet in production)
+    const solBalance = 100; // Placeholder
+    
+    // Update DOM
+    document.getElementById('portfolioValue').textContent = `$${portfolioValue.toFixed(2)}`;
+    document.getElementById('winRate').textContent = `${winRate}%`;
+    document.getElementById('winRateText').textContent = `${completedTrades.length} Total Trades`;
+    document.getElementById('volume24h').textContent = `$${volume24h.toFixed(2)}`;
+    document.getElementById('trades24h').textContent = `${trades24h.length} Trades Today`;
+    document.getElementById('solBalance').textContent = `${solBalance.toFixed(2)} SOL`;
+    
+    document.getElementById('totalTrades').textContent = `${trades.length} Trades`;
+    document.getElementById('activePositions').textContent = Object.keys(positions).length;
+}
+
+function calculateCompletedTrades() {
+    // Group trades by symbol and calculate P&L for completed positions
+    const completed = [];
+    const symbolTrades = {};
+    
+    trades.forEach(trade => {
+        if (!symbolTrades[trade.symbol]) {
+            symbolTrades[trade.symbol] = [];
+        }
+        symbolTrades[trade.symbol].push(trade);
+    });
+    
+    Object.values(symbolTrades).forEach(symTrades => {
+        let holding = 0;
+        let totalCost = 0;
+        
+        symTrades.forEach(trade => {
+            if (trade.type === 'BUY') {
+                holding += trade.amount;
+                totalCost += trade.value;
+            } else if (trade.type === 'SELL' && holding > 0) {
+                const avgPrice = totalCost / holding;
+                const profit = (trade.pricePerToken - avgPrice) * trade.amount;
+                completed.push({ ...trade, profit });
+                holding -= trade.amount;
+                totalCost -= avgPrice * trade.amount;
+            }
+        });
+    });
+    
+    return completed;
+}
+
+function updatePositionsTable() {
+    const tbody = document.getElementById('positionsBody');
+    const posArray = Object.values(positions);
+    
+    document.getElementById('holdingsCount').textContent = `${posArray.length} Holdings`;
+    
+    if (posArray.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" class="no-data">No active positions</td></tr>';
+        return;
+    }
+    
+    tbody.innerHTML = posArray.map(pos => {
+        const currentPrice = tokenPrices[pos.tokenAddress] || pos.avgBuyPrice;
+        const liveValue = pos.amount * currentPrice;
+        const pnl = liveValue - pos.totalCost;
+        const pnlPercent = (pnl / pos.totalCost * 100).toFixed(2);
+        const pnlClass = pnl >= 0 ? 'pnl-positive' : 'pnl-negative';
+        
+        return `
+            <tr>
+                <td><strong>${pos.symbol}</strong></td>
+                <td>${formatNumber(pos.amount)}</td>
+                <td>$${liveValue.toFixed(2)}</td>
+                <td class="${pnlClass}">${pnl >= 0 ? '+' : ''}$${pnl.toFixed(2)} (${pnlPercent}%)</td>
+            </tr>
+        `;
+    }).join('');
+}
+
+function updateTransactionsTable() {
+    const tbody = document.getElementById('transactionsBody');
+    
+    document.getElementById('totalTransactions').textContent = `${trades.length} Total`;
+    
+    if (trades.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="no-data">No transactions yet</td></tr>';
+        return;
+    }
+    
+    const recentTrades = trades.slice(0, 20);
+    
+    tbody.innerHTML = recentTrades.map(trade => {
+        const date = new Date(trade.timestamp);
+        const time = date.toLocaleString('en-US', { 
+            month: 'short', 
+            day: 'numeric', 
+            hour: '2-digit', 
+            minute: '2-digit' 
+        });
+        
+        return `
+            <tr>
+                <td>${time}</td>
+                <td><span class="type-badge ${trade.type.toLowerCase()}">${trade.type}</span></td>
+                <td>${formatNumber(trade.amount)} SOL</td>
+                <td>${trade.symbol}</td>
+                <td>$${trade.value.toFixed(2)}</td>
+                <td><a href="https://solscan.io/tx/${trade.txHash}" target="_blank" class="tx-link">View</a></td>
+            </tr>
+        `;
+    }).join('');
+}
+
+function updateTicker() {
+    const tickerContent = document.getElementById('tickerContent');
+    
+    // Create ticker items for SOL and active positions
+    let tickerHTML = `
+        <span class="ticker-item ${solPrice > 0 ? 'positive' : 'negative'}">
+            SOL/USD $${solPrice.toFixed(2)} ${solPrice > 0 ? '▲' : '▼'}
+        </span>
+    `;
+    
+    Object.values(positions).forEach(pos => {
+        const price = tokenPrices[pos.tokenAddress] || pos.avgBuyPrice;
+        const change = ((price - pos.avgBuyPrice) / pos.avgBuyPrice * 100).toFixed(2);
+        const isPositive = change >= 0;
+        
+        tickerHTML += `
+            <span class="ticker-item ${isPositive ? 'positive' : 'negative'}">
+                ${pos.symbol}/USD $${price.toFixed(6)} ${isPositive ? '+' : ''}${change}%
+            </span>
+        `;
+    });
+    
+    // Duplicate for infinite scroll
+    tickerContent.innerHTML = tickerHTML + tickerHTML;
+}
+
+function updateLastUpdate() {
+    const now = new Date();
+    const time = now.toLocaleTimeString('en-US', { 
+        hour: '2-digit', 
+        minute: '2-digit',
+        second: '2-digit'
+    });
+    document.getElementById('lastUpdate').textContent = time;
+}
+
+// Price Fetching
+async function updatePrices() {
+    try {
+        // Fetch SOL price from CoinGecko
+        const solResponse = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd');
+        const solData = await solResponse.json();
+        solPrice = solData.solana.usd;
+        
+        // Fetch token prices (you'll need Jupiter API or similar)
+        // For now using placeholder logic
+        Object.values(positions).forEach(async pos => {
+            try {
+                // This is where you'd integrate Jupiter API or Birdeye API
+                // For now, using a random fluctuation for demo
+                if (!tokenPrices[pos.tokenAddress]) {
+                    tokenPrices[pos.tokenAddress] = pos.avgBuyPrice;
+                }
+                // Simulate price movement
+                tokenPrices[pos.tokenAddress] *= (1 + (Math.random() - 0.5) * 0.02);
+            } catch (error) {
+                console.error('Error fetching token price:', error);
+            }
+        });
+        
+        updateUI();
+    } catch (error) {
+        console.error('Error updating prices:', error);
+    }
+}
+
+function updatePricesLoop() {
+    updatePrices();
+    setInterval(updatePrices, 30000); // Update every 30 seconds
+}
+
+// Utility Functions
+function formatNumber(num) {
+    if (num >= 1000000) {
+        return (num / 1000000).toFixed(2) + 'M';
+    } else if (num >= 1000) {
+        return (num / 1000).toFixed(2) + 'K';
+    }
+    return num.toFixed(2);
+}
+
+// Real-time listeners
+function setupRealtimeListeners() {
+    const tradesQuery = query(collection(db, 'trades'), orderBy('timestamp', 'desc'), limit(50));
+    
+    onSnapshot(tradesQuery, (snapshot) => {
+        trades = [];
+        snapshot.forEach((doc) => {
+            trades.push({ id: doc.id, ...doc.data() });
+        });
+        calculatePositions();
+        updateUI();
+    });
+}
+
+// Call this after Firebase is initialized
+setTimeout(setupRealtimeListeners, 1000);
+    </script>
+</body>
+</html>
