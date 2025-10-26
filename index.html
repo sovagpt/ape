@@ -12,24 +12,26 @@
 }
 
 body {
-    font-family: 'Courier New', monospace;
-    background: #0a0e27;
-    color: #00ff88;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', 'Helvetica Neue', sans-serif;
+    background: #050811;
+    color: #e0e7ff;
     overflow-x: hidden;
+    line-height: 1.6;
 }
 
 /* Ticker Bar */
 .ticker-bar {
-    background: #0d1229;
-    border-bottom: 1px solid #1a2847;
-    padding: 10px 0;
+    background: linear-gradient(180deg, #0a0f1e 0%, #080d1a 100%);
+    border-bottom: 1px solid rgba(99, 179, 237, 0.1);
+    padding: 12px 0;
     overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .ticker-content {
     display: flex;
-    gap: 40px;
-    animation: scroll 30s linear infinite;
+    gap: 60px;
+    animation: scroll 40s linear infinite;
     white-space: nowrap;
 }
 
@@ -41,120 +43,145 @@ body {
 .ticker-item {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
-    font-size: 14px;
+    gap: 12px;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
 }
 
-.ticker-item.positive { color: #00ff88; }
-.ticker-item.negative { color: #ff4466; }
+.ticker-item.positive { 
+    color: #10b981;
+}
+.ticker-item.negative { 
+    color: #ef4444;
+}
 
 /* Header */
 header {
-    background: #0d1229;
-    border-bottom: 1px solid #1a2847;
-    padding: 20px 40px;
+    background: linear-gradient(180deg, #0a0f1e 0%, #080d1a 100%);
+    border-bottom: 1px solid rgba(99, 179, 237, 0.1);
+    padding: 24px 48px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    backdrop-filter: blur(10px);
 }
 
 .header-left {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 20px;
 }
 
 .header-left h1 {
-    font-size: 32px;
-    color: #00ff88;
-    letter-spacing: 2px;
+    font-size: 28px;
+    color: #60a5fa;
+    letter-spacing: 0.5px;
+    font-weight: 700;
 }
 
 .status-badge {
-    padding: 4px 12px;
-    border-radius: 4px;
-    font-size: 12px;
-    font-weight: bold;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
 }
 
 .status-badge.live {
-    background: #00ff88;
-    color: #0a0e27;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
 }
 
 .status-badge.active {
-    background: #00ff8833;
-    color: #00ff88;
-    border: 1px solid #00ff88;
+    background: rgba(16, 185, 129, 0.15);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.3);
 }
 
 .status-badge.online {
-    background: #00ff88;
-    color: #0a0e27;
-    font-size: 11px;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    font-size: 10px;
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
 }
 
 .timer {
-    color: #6b7c9e;
+    color: #64748b;
     font-size: 14px;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
 }
 
 .header-right {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 16px;
 }
 
 .icon-btn {
-    background: transparent;
-    border: 1px solid #1a2847;
-    color: #6b7c9e;
-    padding: 8px 12px;
-    border-radius: 4px;
+    background: rgba(99, 179, 237, 0.1);
+    border: 1px solid rgba(99, 179, 237, 0.2);
+    color: #94a3b8;
+    padding: 10px 14px;
+    border-radius: 8px;
     cursor: pointer;
-    transition: all 0.3s;
+    transition: all 0.3s ease;
+    font-size: 16px;
 }
 
 .icon-btn:hover {
-    border-color: #00ff88;
-    color: #00ff88;
+    border-color: #60a5fa;
+    color: #60a5fa;
+    background: rgba(99, 179, 237, 0.15);
+    transform: translateY(-1px);
 }
 
 .wallet-address {
-    background: #1a2847;
-    padding: 8px 16px;
-    border-radius: 4px;
+    background: rgba(99, 179, 237, 0.05);
+    padding: 10px 18px;
+    border-radius: 8px;
     font-size: 12px;
-    color: #6b7c9e;
+    color: #94a3b8;
+    border: 1px solid rgba(99, 179, 237, 0.1);
+    font-family: 'Monaco', monospace;
 }
 
 .api-status {
-    color: #6b7c9e;
+    color: #64748b;
     font-size: 12px;
+    font-weight: 500;
 }
 
 .refresh-btn {
-    background: #1a5fb4;
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
     border: none;
     color: white;
-    padding: 8px 16px;
-    border-radius: 4px;
+    padding: 10px 20px;
+    border-radius: 8px;
     cursor: pointer;
-    transition: all 0.3s;
-    font-weight: bold;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.3px;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
 
 .refresh-btn:hover {
-    background: #2779d9;
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
 }
 
 /* Main Container */
 .container {
     display: grid;
     grid-template-columns: 400px 1fr;
-    gap: 20px;
-    padding: 20px 40px;
-    max-width: 1800px;
+    gap: 24px;
+    padding: 32px 48px;
+    max-width: 1920px;
     margin: 0 auto;
 }
 
@@ -162,44 +189,48 @@ header {
 .left-panel {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 24px;
 }
 
 .monitor-card {
-    background: #0d1229;
-    border: 1px solid #1a2847;
-    border-radius: 8px;
-    padding: 20px;
+    background: linear-gradient(145deg, #0f1629 0%, #0a0f1e 100%);
+    border: 1px solid rgba(99, 179, 237, 0.15);
+    border-radius: 16px;
+    padding: 28px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
 }
 
 .card-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid #1a2847;
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(99, 179, 237, 0.1);
 }
 
 .card-header h3 {
-    color: #00ff88;
-    font-size: 14px;
-    letter-spacing: 1px;
+    color: #60a5fa;
+    font-size: 13px;
+    letter-spacing: 1.5px;
+    font-weight: 600;
+    text-transform: uppercase;
 }
 
 .ape-profile {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
+    gap: 24px;
 }
 
 .ape-avatar {
     width: 180px;
     height: 180px;
     border-radius: 50%;
-    border: 3px solid #00ff88;
+    border: 3px solid #60a5fa;
     object-fit: cover;
+    box-shadow: 0 8px 32px rgba(96, 165, 250, 0.3);
 }
 
 .ape-stats {
@@ -209,25 +240,26 @@ header {
 .stat-row {
     display: flex;
     justify-content: space-between;
-    padding: 12px 0;
-    border-bottom: 1px solid #1a2847;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(99, 179, 237, 0.08);
     font-size: 14px;
 }
 
 .stat-row span:first-child {
-    color: #6b7c9e;
+    color: #94a3b8;
+    font-weight: 500;
 }
 
 .stat-row span:last-child {
-    color: #00ff88;
-    font-weight: bold;
+    color: #e0e7ff;
+    font-weight: 600;
 }
 
 /* Right Panel */
 .right-panel {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 24px;
 }
 
 .stats-grid {
@@ -237,108 +269,135 @@ header {
 }
 
 .stat-card {
-    background: #0d1229;
-    border: 1px solid #1a2847;
-    border-radius: 8px;
-    padding: 20px;
+    background: linear-gradient(145deg, #0f1629 0%, #0a0f1e 100%);
+    border: 1px solid rgba(99, 179, 237, 0.15);
+    border-radius: 16px;
+    padding: 24px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    border-color: rgba(99, 179, 237, 0.3);
 }
 
 .stat-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 15px;
-    font-size: 12px;
-    color: #6b7c9e;
+    margin-bottom: 16px;
+    font-size: 11px;
+    color: #94a3b8;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
 }
 
 .stat-icon {
-    font-size: 20px;
+    font-size: 18px;
+    opacity: 0.6;
 }
 
 .stat-value {
-    font-size: 28px;
-    color: #00ff88;
-    font-weight: bold;
-    margin-bottom: 5px;
+    font-size: 32px;
+    color: #e0e7ff;
+    font-weight: 700;
+    margin-bottom: 8px;
+    font-variant-numeric: tabular-nums;
 }
 
 .stat-subtext {
     font-size: 12px;
-    color: #6b7c9e;
+    color: #64748b;
+    font-weight: 500;
 }
 
 .positions-card, .transactions-card {
-    background: #0d1229;
-    border: 1px solid #1a2847;
-    border-radius: 8px;
-    padding: 20px;
+    background: linear-gradient(145deg, #0f1629 0%, #0a0f1e 100%);
+    border: 1px solid rgba(99, 179, 237, 0.15);
+    border-radius: 16px;
+    padding: 28px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 15px;
+    margin-top: 20px;
 }
 
 thead {
-    border-bottom: 1px solid #1a2847;
+    border-bottom: 1px solid rgba(99, 179, 237, 0.15);
 }
 
 th {
     text-align: left;
-    padding: 12px;
-    font-size: 12px;
-    color: #6b7c9e;
-    font-weight: normal;
+    padding: 14px 16px;
+    font-size: 11px;
+    color: #94a3b8;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
 }
 
 td {
-    padding: 12px;
+    padding: 16px;
     font-size: 14px;
-    border-bottom: 1px solid #1a2847;
+    border-bottom: 1px solid rgba(99, 179, 237, 0.08);
+    color: #cbd5e1;
 }
 
 .no-data {
     text-align: center;
-    color: #6b7c9e;
-    padding: 30px !important;
+    color: #64748b;
+    padding: 40px !important;
+    font-style: italic;
 }
 
 .type-badge {
-    padding: 4px 10px;
-    border-radius: 4px;
+    padding: 5px 12px;
+    border-radius: 6px;
     font-size: 11px;
-    font-weight: bold;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
 }
 
 .type-badge.buy {
-    background: #00ff8833;
-    color: #00ff88;
+    background: rgba(16, 185, 129, 0.15);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.3);
 }
 
 .type-badge.sell {
-    background: #ff446633;
-    color: #ff4466;
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.3);
 }
 
 .tx-link {
-    color: #1a5fb4;
+    color: #60a5fa;
     text-decoration: none;
     cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
 }
 
 .tx-link:hover {
-    color: #2779d9;
+    color: #3b82f6;
     text-decoration: underline;
 }
 
 .pnl-positive {
-    color: #00ff88;
+    color: #10b981;
+    font-weight: 600;
 }
 
 .pnl-negative {
-    color: #ff4466;
+    color: #ef4444;
+    font-weight: 600;
 }
 
 /* Modal */
@@ -349,7 +408,8 @@ td {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px);
     z-index: 1000;
     justify-content: center;
     align-items: center;
@@ -360,89 +420,109 @@ td {
 }
 
 .modal-content {
-    background: #0d1229;
-    border: 1px solid #1a2847;
-    border-radius: 8px;
+    background: linear-gradient(145deg, #0f1629 0%, #0a0f1e 100%);
+    border: 1px solid rgba(99, 179, 237, 0.2);
+    border-radius: 20px;
     width: 90%;
     max-width: 600px;
     max-height: 90vh;
     overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
 }
 
 .modal-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px;
-    border-bottom: 1px solid #1a2847;
+    padding: 28px 32px;
+    border-bottom: 1px solid rgba(99, 179, 237, 0.15);
 }
 
 .modal-header h2 {
-    color: #00ff88;
-    font-size: 18px;
+    color: #60a5fa;
+    font-size: 20px;
+    font-weight: 600;
 }
 
 .close-btn {
     background: transparent;
     border: none;
-    color: #6b7c9e;
+    color: #94a3b8;
     font-size: 28px;
     cursor: pointer;
-    transition: color 0.3s;
+    transition: all 0.3s ease;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
 }
 
 .close-btn:hover {
-    color: #00ff88;
+    color: #60a5fa;
+    background: rgba(99, 179, 237, 0.1);
 }
 
 .modal-body {
-    padding: 20px;
+    padding: 32px;
 }
 
 .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 24px;
 }
 
 .form-group label {
     display: block;
-    color: #6b7c9e;
+    color: #94a3b8;
     font-size: 12px;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
 }
 
 .form-group input,
 .form-group select {
     width: 100%;
-    background: #1a2847;
-    border: 1px solid #2d3a5c;
-    color: #00ff88;
-    padding: 12px;
-    border-radius: 4px;
-    font-family: 'Courier New', monospace;
+    background: rgba(99, 179, 237, 0.05);
+    border: 1px solid rgba(99, 179, 237, 0.2);
+    color: #e0e7ff;
+    padding: 14px 16px;
+    border-radius: 10px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-size: 14px;
+    transition: all 0.3s ease;
 }
 
 .form-group input:focus,
 .form-group select:focus {
     outline: none;
-    border-color: #00ff88;
+    border-color: #60a5fa;
+    background: rgba(99, 179, 237, 0.08);
+    box-shadow: 0 0 0 3px rgba(99, 179, 237, 0.1);
 }
 
 .submit-btn {
     width: 100%;
-    background: #00ff88;
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
     border: none;
-    color: #0a0e27;
-    padding: 14px;
-    border-radius: 4px;
-    font-weight: bold;
+    color: white;
+    padding: 16px;
+    border-radius: 10px;
+    font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s;
-    font-size: 16px;
+    transition: all 0.3s ease;
+    font-size: 15px;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
 }
 
 .submit-btn:hover {
-    background: #00dd77;
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
 }
 
 /* Responsive */
@@ -459,6 +539,7 @@ td {
 @media (max-width: 768px) {
     .container {
         grid-template-columns: 1fr;
+        padding: 20px;
     }
     
     .stats-grid {
@@ -468,6 +549,7 @@ td {
     header {
         flex-direction: column;
         gap: 15px;
+        padding: 20px;
     }
 }
     </style>
@@ -485,10 +567,10 @@ td {
         </div>
         <div class="header-right">
             <button class="icon-btn" id="settingsBtn">⚙</button>
-            <button class="icon-btn" id="chartBtn">📊</button>
+            <button class="icon-btn" id="chartBtn">▦</button>
             <span class="wallet-address" id="walletAddress">Loading...</span>
             <span class="api-status">API Status</span>
-            <button class="refresh-btn" id="refreshBtn">🔄 REFRESH</button>
+            <button class="refresh-btn" id="refreshBtn">↻ REFRESH</button>
         </div>
     </header>
 
@@ -528,7 +610,6 @@ td {
                 <div class="stat-card">
                     <div class="stat-header">
                         <span>PORTFOLIO VALUE</span>
-                        <span class="stat-icon">💰</span>
                     </div>
                     <div class="stat-value" id="portfolioValue">$0.00</div>
                 </div>
@@ -536,7 +617,6 @@ td {
                 <div class="stat-card">
                     <div class="stat-header">
                         <span>WIN RATE</span>
-                        <span class="stat-icon">📊</span>
                     </div>
                     <div class="stat-value" id="winRate">0%</div>
                     <div class="stat-subtext" id="winRateText">0 Total Trades</div>
@@ -545,7 +625,6 @@ td {
                 <div class="stat-card">
                     <div class="stat-header">
                         <span>24H VOLUME</span>
-                        <span class="stat-icon">📈</span>
                     </div>
                     <div class="stat-value" id="volume24h">$0.00</div>
                     <div class="stat-subtext" id="trades24h">0 Trades Today</div>
@@ -554,7 +633,6 @@ td {
                 <div class="stat-card">
                     <div class="stat-header">
                         <span>SOL BALANCE</span>
-                        <span class="stat-icon">🌐</span>
                     </div>
                     <div class="stat-value" id="solBalance">0 SOL</div>
                     <div class="stat-subtext">Available Liquidity</div>
@@ -609,54 +687,6 @@ td {
         </div>
     </main>
 
-    <!-- Admin Panel Modal -->
-    <div class="modal" id="adminModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Admin Panel - Add Trade</h2>
-                <button class="close-btn" id="closeModal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="tradeForm">
-                    <div class="form-group">
-                        <label>Trade Type</label>
-                        <select id="tradeType" required>
-                            <option value="BUY">BUY</option>
-                            <option value="SELL">SELL</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Token Symbol</label>
-                        <input type="text" id="tokenSymbol" placeholder="e.g., BONK" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Token Address</label>
-                        <input type="text" id="tokenAddress" placeholder="Solana token address" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Amount</label>
-                        <input type="number" id="amount" step="0.000001" placeholder="0.00" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Price per Token (USD)</label>
-                        <input type="number" id="pricePerToken" step="0.000001" placeholder="0.00" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Transaction Hash</label>
-                        <input type="text" id="txHash" placeholder="Solana transaction hash" required>
-                    </div>
-
-                    <button type="submit" class="submit-btn">Add Trade</button>
-                </form>
-            </div>
-        </div>
-    </div>
-
     <script type="module">
 // Firebase Configuration
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
@@ -684,21 +714,22 @@ let solPrice = 0;
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
-    initializeApp();
+    initApp();
     setupEventListeners();
     startTimer();
     loadData();
     updatePricesLoop();
 });
 
-function initializeApp() {
+function initApp() {
     console.log('APE Trading Bot Initialized');
 }
 
 function setupEventListeners() {
-    // Settings button opens admin panel
-    document.getElementById('settingsBtn').addEventListener('click', openAdminPanel);
-    document.getElementById('closeModal').addEventListener('click', closeAdminPanel);
+    // Settings button goes to admin page
+    document.getElementById('settingsBtn').addEventListener('click', () => {
+        window.location.href = 'admin.html';
+    });
     
     // Refresh button
     document.getElementById('refreshBtn').addEventListener('click', () => {
@@ -706,14 +737,9 @@ function setupEventListeners() {
         updatePrices();
     });
     
-    // Trade form submission
-    document.getElementById('tradeForm').addEventListener('submit', handleTradeSubmit);
-    
-    // Close modal on outside click
-    document.getElementById('adminModal').addEventListener('click', (e) => {
-        if (e.target.id === 'adminModal') {
-            closeAdminPanel();
-        }
+    // Chart button (placeholder for future feature)
+    document.getElementById('chartBtn').addEventListener('click', () => {
+        console.log('Charts coming soon');
     });
 }
 
