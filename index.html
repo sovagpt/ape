@@ -1001,21 +1001,32 @@ async function updatePrices() {
         const solData = await solResponse.json();
         solPrice = solData.solana.usd;
         
-        // Fetch token prices (you'll need Jupiter API or similar)
-        // For now using placeholder logic
-        Object.values(positions).forEach(async pos => {
+        // Fetch token prices from Birdeye API
+        for (const pos of Object.values(positions)) {
             try {
-                // This is where you'd integrate Jupiter API or Birdeye API
-                // For now, using a random fluctuation for demo
+                const response = await fetch(`https://public-api.birdeye.so/public/price?address=${pos.tokenAddress}`, {
+                    headers: {
+                        'X-API-KEY': 'cc4e9dcb4ee34f6a891b088c7a04d1f3'
+                    }
+                });
+                const data = await response.json();
+                
+                if (data.success && data.data && data.data.value) {
+                    tokenPrices[pos.tokenAddress] = data.data.value;
+                } else {
+                    // Fallback to average buy price if API fails
+                    if (!tokenPrices[pos.tokenAddress]) {
+                        tokenPrices[pos.tokenAddress] = pos.avgBuyPrice;
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching token price for', pos.symbol, error);
+                // Fallback to average buy price
                 if (!tokenPrices[pos.tokenAddress]) {
                     tokenPrices[pos.tokenAddress] = pos.avgBuyPrice;
                 }
-                // Simulate price movement
-                tokenPrices[pos.tokenAddress] *= (1 + (Math.random() - 0.5) * 0.02);
-            } catch (error) {
-                console.error('Error fetching token price:', error);
             }
-        });
+        }
         
         updateUI();
     } catch (error) {
