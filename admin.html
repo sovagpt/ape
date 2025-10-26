@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APE Admin Panel</title>
+    <style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', 'Helvetica Neue', sans-serif;
+    background: #050811;
+    color: #e0e7ff;
+    line-height: 1.6;
+    padding: 40px;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 48px;
+}
+
+h1 {
+    font-size: 36px;
+    color: #60a5fa;
+    margin-bottom: 12px;
+    font-weight: 700;
+}
+
+.subtitle {
+    color: #94a3b8;
+    font-size: 16px;
+}
+
+.admin-card {
+    background: linear-gradient(145deg, #0f1629 0%, #0a0f1e 100%);
+    border: 1px solid rgba(99, 179, 237, 0.15);
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.form-group {
+    margin-bottom: 28px;
+}
+
+.form-group label {
+    display: block;
+    color: #94a3b8;
+    font-size: 12px;
+    margin-bottom: 10px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    background: rgba(99, 179, 237, 0.05);
+    border: 1px solid rgba(99, 179, 237, 0.2);
+    color: #e0e7ff;
+    padding: 14px 16px;
+    border-radius: 10px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #60a5fa;
+    background: rgba(99, 179, 237, 0.08);
+    box-shadow: 0 0 0 3px rgba(99, 179, 237, 0.1);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.submit-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    border: none;
+    color: white;
+    padding: 16px;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 15px;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
+    margin-top: 12px;
+}
+
+.submit-btn:hover {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+}
+
+.success-message {
+    display: none;
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    color: #10b981;
+    padding: 16px;
+    border-radius: 10px;
+    margin-bottom: 24px;
+    text-align: center;
+    font-weight: 600;
+}
+
+.success-message.show {
+    display: block;
+}
+
+.recent-trades {
+    margin-top: 48px;
+    background: linear-gradient(145deg, #0f1629 0%, #0a0f1e 100%);
+    border: 1px solid rgba(99, 179, 237, 0.15);
+    border-radius: 20px;
+    padding: 32px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.recent-trades h2 {
+    color: #60a5fa;
+    font-size: 20px;
+    margin-bottom: 24px;
+    font-weight: 600;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead {
+    border-bottom: 1px solid rgba(99, 179, 237, 0.15);
+}
+
+th {
+    text-align: left;
+    padding: 14px 16px;
+    font-size: 11px;
+    color: #94a3b8;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+td {
+    padding: 16px;
+    font-size: 14px;
+    border-bottom: 1px solid rgba(99, 179, 237, 0.08);
+    color: #cbd5e1;
+}
+
+.type-badge {
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.type-badge.buy {
+    background: rgba(16, 185, 129, 0.15);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.type-badge.sell {
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.back-link {
+    display: inline-block;
+    color: #60a5fa;
+    text-decoration: none;
+    margin-bottom: 32px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.back-link:hover {
+    color: #3b82f6;
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 20px;
+    }
+    
+    .admin-card {
+        padding: 24px;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link">← Back to Dashboard</a>
+        
+        <header>
+            <h1>APE Admin Panel</h1>
+            <p class="subtitle">Add and manage trading transactions</p>
+        </header>
+
+        <div class="success-message" id="successMessage">
+            Trade added successfully!
+        </div>
+
+        <div class="admin-card">
+            <form id="tradeForm">
+                <div class="form-group">
+                    <label>Trade Type</label>
+                    <select id="tradeType" required>
+                        <option value="BUY">BUY</option>
+                        <option value="SELL">SELL</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Token Symbol</label>
+                        <input type="text" id="tokenSymbol" placeholder="e.g., BONK, WIF, POPCAT" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Amount</label>
+                        <input type="number" id="amount" step="0.000001" placeholder="0.00" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Token Address</label>
+                    <input type="text" id="tokenAddress" placeholder="Solana token address" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Price per Token (USD)</label>
+                        <input type="number" id="pricePerToken" step="0.000001" placeholder="0.00" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Total Value (USD)</label>
+                        <input type="number" id="totalValue" placeholder="Auto-calculated" readonly>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Transaction Hash</label>
+                    <input type="text" id="txHash" placeholder="Solana transaction hash" required>
+                </div>
+
+                <button type="submit" class="submit-btn">Add Trade</button>
+            </form>
+        </div>
+
+        <div class="recent-trades">
+            <h2>Recent Trades</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Type</th>
+                        <th>Symbol</th>
+                        <th>Amount</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody id="recentTradesBody">
+                    <tr>
+                        <td colspan="5" style="text-align: center; color: #64748b; padding: 40px;">No trades yet</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
+        import { getFirestore, collection, addDoc, getDocs, query, orderBy, limit } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCS3qi9luuIr7WmghMfRXTIxprT4m2v8sQ",
+            authDomain: "apee-15ea0.firebaseapp.com",
+            projectId: "apee-15ea0",
+            storageBucket: "apee-15ea0.firebasestorage.app",
+            messagingSenderId: "138789462447",
+            appId: "1:138789462447:web:67cf87ffce73d845e90f5a",
+            measurementId: "G-S6B3K5GGM2"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Auto-calculate total value
+        const amountInput = document.getElementById('amount');
+        const priceInput = document.getElementById('pricePerToken');
+        const totalInput = document.getElementById('totalValue');
+
+        function calculateTotal() {
+            const amount = parseFloat(amountInput.value) || 0;
+            const price = parseFloat(priceInput.value) || 0;
+            totalInput.value = (amount * price).toFixed(2);
+        }
+
+        amountInput.addEventListener('input', calculateTotal);
+        priceInput.addEventListener('input', calculateTotal);
+
+        // Form submission
+        document.getElementById('tradeForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const trade = {
+                type: document.getElementById('tradeType').value,
+                symbol: document.getElementById('tokenSymbol').value.toUpperCase(),
+                tokenAddress: document.getElementById('tokenAddress').value,
+                amount: parseFloat(document.getElementById('amount').value),
+                pricePerToken: parseFloat(document.getElementById('pricePerToken').value),
+                txHash: document.getElementById('txHash').value,
+                timestamp: Date.now(),
+                value: parseFloat(document.getElementById('amount').value) * parseFloat(document.getElementById('pricePerToken').value)
+            };
+
+            try {
+                await addDoc(collection(db, 'trades'), trade);
+                
+                // Show success message
+                const successMsg = document.getElementById('successMessage');
+                successMsg.classList.add('show');
+                setTimeout(() => successMsg.classList.remove('show'), 3000);
+
+                // Reset form
+                document.getElementById('tradeForm').reset();
+                
+                // Reload recent trades
+                loadRecentTrades();
+            } catch (error) {
+                console.error('Error adding trade:', error);
+                alert('Error adding trade: ' + error.message);
+            }
+        });
+
+        // Load recent trades
+        async function loadRecentTrades() {
+            try {
+                const tradesQuery = query(collection(db, 'trades'), orderBy('timestamp', 'desc'), limit(10));
+                const snapshot = await getDocs(tradesQuery);
+                
+                const tbody = document.getElementById('recentTradesBody');
+                
+                if (snapshot.empty) {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #64748b; padding: 40px;">No trades yet</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = '';
+                snapshot.forEach((doc) => {
+                    const trade = doc.data();
+                    const date = new Date(trade.timestamp);
+                    const time = date.toLocaleString('en-US', { 
+                        month: 'short', 
+                        day: 'numeric', 
+                        hour: '2-digit', 
+                        minute: '2-digit' 
+                    });
+
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${time}</td>
+                        <td><span class="type-badge ${trade.type.toLowerCase()}">${trade.type}</span></td>
+                        <td><strong>${trade.symbol}</strong></td>
+                        <td>${trade.amount.toFixed(4)}</td>
+                        <td>$${trade.value.toFixed(2)}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error loading trades:', error);
+            }
+        }
+
+        // Load on page load
+        loadRecentTrades();
+    </script>
+</body>
+</html>
