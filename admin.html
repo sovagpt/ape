@@ -856,6 +856,7 @@ td {
                     symbol: ticker,
                     amount: amount.toFixed(4),
                     price: pricePerToken.toFixed(6),
+                    imageUrl: buyImageData,
                     timestamp: Date.now()
                 };
                 await addDoc(collection(db, 'activities'), activity);
@@ -945,6 +946,7 @@ td {
                     amount: amount.toFixed(4),
                     price: pricePerToken.toFixed(6),
                     pnl: pnl,
+                    imageUrl: imageUrl,
                     timestamp: Date.now()
                 };
                 await addDoc(collection(db, 'activities'), activity);
