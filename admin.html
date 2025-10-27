@@ -724,15 +724,23 @@ td {
 
         // Reset button functionality
         document.getElementById('resetBtn').addEventListener('click', async () => {
-            if (confirm('⚠️ WARNING: This will delete ALL trades and reset ALL data. This cannot be undone. Are you sure?')) {
+            if (confirm('⚠️ WARNING: This will delete ALL trades, activities, and reset ALL data. This cannot be undone. Are you sure?')) {
                 if (confirm('Final confirmation: Delete everything?')) {
                     try {
                         // Delete all trades
                         const tradesQuery = query(collection(db, 'trades'));
-                        const snapshot = await getDocs(tradesQuery);
+                        const tradesSnapshot = await getDocs(tradesQuery);
                         
                         const deletePromises = [];
-                        snapshot.forEach((doc) => {
+                        tradesSnapshot.forEach((doc) => {
+                            deletePromises.push(deleteDoc(doc.ref));
+                        });
+                        
+                        // Delete all activities (terminal logs)
+                        const activitiesQuery = query(collection(db, 'activities'));
+                        const activitiesSnapshot = await getDocs(activitiesQuery);
+                        
+                        activitiesSnapshot.forEach((doc) => {
                             deletePromises.push(deleteDoc(doc.ref));
                         });
                         
