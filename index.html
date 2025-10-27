@@ -400,6 +400,20 @@ td {
     font-weight: 600;
 }
 
+.token-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.token-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(99, 179, 237, 0.2);
+}
+
 /* Modal */
 .modal {
     display: none;
@@ -647,7 +661,7 @@ td {
                 <table class="positions-table">
                     <thead>
                         <tr>
-                            <th>Symbol</th>
+                            <th>Token</th>
                             <th>Amount</th>
                             <th>Live Value</th>
                             <th>P&L</th>
@@ -671,8 +685,8 @@ td {
                         <tr>
                             <th>TIME</th>
                             <th>TYPE</th>
-                            <th>FROM</th>
-                            <th>TO</th>
+                            <th>TOKEN</th>
+                            <th>AMOUNT</th>
                             <th>VALUE</th>
                             <th>TX</th>
                         </tr>
@@ -818,10 +832,16 @@ function calculatePositions() {
             positions[trade.symbol] = {
                 symbol: trade.symbol,
                 tokenAddress: trade.tokenAddress,
+                imageUrl: trade.imageUrl || null,
                 amount: 0,
                 totalCost: 0,
                 avgBuyPrice: 0
             };
+        }
+        
+        // Update imageUrl if available
+        if (trade.imageUrl && !positions[trade.symbol].imageUrl) {
+            positions[trade.symbol].imageUrl = trade.imageUrl;
         }
         
         if (trade.type === 'BUY') {
@@ -940,7 +960,12 @@ function updatePositionsTable() {
         
         return `
             <tr>
-                <td><strong>${pos.symbol}</strong></td>
+                <td>
+                    <div class="token-info">
+                        ${pos.imageUrl ? `<img src="${pos.imageUrl}" class="token-icon" alt="${pos.symbol}">` : ''}
+                        <strong>${pos.symbol}</strong>
+                    </div>
+                </td>
                 <td>${formatNumber(pos.amount)}</td>
                 <td>$${liveValue.toFixed(2)}</td>
                 <td class="${pnlClass}">${pnl >= 0 ? '+' : ''}$${pnl.toFixed(2)} (${pnlPercent}%)</td>
@@ -974,8 +999,13 @@ function updateTransactionsTable() {
             <tr>
                 <td>${time}</td>
                 <td><span class="type-badge ${trade.type.toLowerCase()}">${trade.type}</span></td>
-                <td>${formatNumber(trade.amount)} SOL</td>
-                <td>${trade.symbol}</td>
+                <td>
+                    <div class="token-info">
+                        ${trade.imageUrl ? `<img src="${trade.imageUrl}" class="token-icon" alt="${trade.symbol}">` : ''}
+                        <strong>${trade.symbol}</strong>
+                    </div>
+                </td>
+                <td>${formatNumber(trade.amount)}</td>
                 <td>$${trade.value.toFixed(2)}</td>
                 <td><a href="https://solscan.io/tx/${trade.txHash}" target="_blank" class="tx-link">View</a></td>
             </tr>
