@@ -67,20 +67,14 @@ h1 {
     border-radius: 20px;
     padding: 40px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-    transition: all 0.3s ease;
-}
-
-.panel:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
 }
 
 .panel.buy-panel {
     border-top: 3px solid #10b981;
 }
 
-.panel.sell-panel {
-    border-top: 3px solid #ef4444;
+.panel.holdings-panel {
+    border-top: 3px solid #60a5fa;
 }
 
 .panel-header {
@@ -94,12 +88,12 @@ h1 {
     margin-bottom: 8px;
 }
 
-.panel.buy-panel h2 {
+.buy-panel h2 {
     color: #10b981;
 }
 
-.panel.sell-panel h2 {
-    color: #ef4444;
+.holdings-panel h2 {
+    color: #60a5fa;
 }
 
 .panel-header p {
@@ -149,9 +143,7 @@ h1 {
     text-transform: uppercase;
 }
 
-.form-group input,
-.form-group select,
-.form-group textarea {
+.form-group input {
     width: 100%;
     background: rgba(99, 179, 237, 0.05);
     border: 1px solid rgba(99, 179, 237, 0.2);
@@ -163,14 +155,7 @@ h1 {
     transition: all 0.3s ease;
 }
 
-.form-group textarea {
-    resize: vertical;
-    min-height: 80px;
-}
-
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
+.form-group input:focus {
     outline: none;
     border-color: #60a5fa;
     background: rgba(99, 179, 237, 0.08);
@@ -228,6 +213,7 @@ input[type="file"] {
 
 .submit-btn {
     width: 100%;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
     border: none;
     color: white;
     padding: 16px;
@@ -238,26 +224,180 @@ input[type="file"] {
     font-size: 15px;
     letter-spacing: 0.3px;
     text-transform: uppercase;
+    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
     margin-top: 12px;
 }
 
-.buy-panel .submit-btn {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
-}
-
-.buy-panel .submit-btn:hover {
+.submit-btn:hover {
     background: linear-gradient(135deg, #059669 0%, #047857 100%);
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
 }
 
-.sell-panel .submit-btn {
-    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-    box-shadow: 0 4px 16px rgba(239, 68, 68, 0.3);
+.holdings-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-height: 500px;
+    overflow-y: auto;
 }
 
-.sell-panel .submit-btn:hover {
+.holding-item {
+    background: rgba(99, 179, 237, 0.05);
+    border: 1px solid rgba(99, 179, 237, 0.15);
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.holding-item:hover {
+    background: rgba(99, 179, 237, 0.08);
+    border-color: rgba(99, 179, 237, 0.25);
+}
+
+.holding-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.token-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(99, 179, 237, 0.3);
+}
+
+.token-details h3 {
+    color: #e0e7ff;
+    font-size: 18px;
+    margin-bottom: 4px;
+}
+
+.token-details p {
+    color: #94a3b8;
+    font-size: 13px;
+}
+
+.pnl-positive {
+    color: #10b981;
+}
+
+.pnl-negative {
+    color: #ef4444;
+}
+
+.sell-btn {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    border: none;
+    color: white;
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 13px;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+}
+
+.sell-btn:hover {
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+}
+
+.no-holdings {
+    text-align: center;
+    color: #64748b;
+    padding: 40px;
+    font-style: italic;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-content {
+    background: linear-gradient(145deg, #0f1629 0%, #0a0f1e 100%);
+    border: 1px solid rgba(99, 179, 237, 0.2);
+    border-radius: 20px;
+    width: 90%;
+    max-width: 500px;
+    padding: 32px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+    position: relative;
+}
+
+.modal-header {
+    margin-bottom: 24px;
+}
+
+.modal-header h2 {
+    color: #ef4444;
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.modal-header p {
+    color: #94a3b8;
+    font-size: 14px;
+}
+
+.close-btn {
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    font-size: 28px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: absolute;
+    top: 24px;
+    right: 24px;
+}
+
+.close-btn:hover {
+    color: #60a5fa;
+}
+
+.sell-modal-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    border: none;
+    color: white;
+    padding: 16px;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 15px;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    box-shadow: 0 4px 16px rgba(239, 68, 68, 0.3);
+    margin-top: 12px;
+}
+
+.sell-modal-btn:hover {
     background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
@@ -310,7 +450,7 @@ td {
     gap: 12px;
 }
 
-.token-icon {
+.token-icon-small {
     width: 32px;
     height: 32px;
     border-radius: 50%;
@@ -362,7 +502,7 @@ td {
         
         <header>
             <h1>APE Admin Panel</h1>
-            <p class="subtitle">Add buy and sell trades</p>
+            <p class="subtitle">Add trades and manage holdings</p>
         </header>
 
         <div class="panels-grid">
@@ -421,59 +561,16 @@ td {
                 </form>
             </div>
 
-            <!-- SELL PANEL -->
-            <div class="panel sell-panel">
+            <!-- HOLDINGS PANEL -->
+            <div class="panel holdings-panel">
                 <div class="panel-header">
-                    <h2>SELL TRADE</h2>
-                    <p>Record a token sale</p>
+                    <h2>HOLDINGS</h2>
+                    <p>Click sell to record a sale</p>
                 </div>
 
-                <div class="success-message" id="sellSuccessMessage">
-                    Sell trade added successfully!
+                <div class="holdings-list" id="holdingsList">
+                    <div class="no-holdings">No holdings yet</div>
                 </div>
-
-                <form id="sellForm">
-                    <div class="form-group">
-                        <label>Token Ticker</label>
-                        <input type="text" id="sellTicker" placeholder="e.g., BONK, WIF, POPCAT" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Token Address</label>
-                        <input type="text" id="sellTokenAddress" placeholder="Solana token address" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Amount of Tokens</label>
-                        <input type="number" id="sellAmount" step="0.000001" placeholder="0.00" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Total Value (USD)</label>
-                        <input type="number" id="sellTotalValue" step="0.01" placeholder="0.00" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Transaction Hash</label>
-                        <input type="text" id="sellTxHash" placeholder="Solana transaction hash" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Token Image</label>
-                        <div class="image-upload-area" id="sellImageUpload">
-                            <input type="file" id="sellImageInput" accept="image/*">
-                            <div class="upload-text">
-                                <strong>Click to upload</strong> or drag and drop<br>
-                                PNG, JPG, WebP (max 2MB)
-                            </div>
-                            <div class="image-preview" id="sellImagePreview">
-                                <img id="sellImagePreviewImg" src="" alt="Preview">
-                            </div>
-                        </div>
-                    </div>
-
-                    <button type="submit" class="submit-btn">Add Sell Trade</button>
-                </form>
             </div>
         </div>
 
@@ -498,9 +595,43 @@ td {
         </div>
     </div>
 
+    <!-- Sell Modal -->
+    <div class="modal" id="sellModal">
+        <div class="modal-content">
+            <button class="close-btn" id="closeSellModal">&times;</button>
+            <div class="modal-header">
+                <h2>Sell <span id="sellModalSymbol"></span></h2>
+                <p>Enter the sale details</p>
+            </div>
+            <form id="sellForm">
+                <input type="hidden" id="sellTokenAddress">
+                <input type="hidden" id="sellTokenSymbol">
+                <input type="hidden" id="sellTokenImage">
+                
+                <div class="form-group">
+                    <label>Amount of Tokens to Sell</label>
+                    <input type="number" id="sellAmount" step="0.000001" placeholder="0.00" required>
+                    <p style="font-size: 12px; color: #94a3b8; margin-top: 8px;">Available: <span id="availableAmount">0</span></p>
+                </div>
+
+                <div class="form-group">
+                    <label>Total Value (USD)</label>
+                    <input type="number" id="sellTotalValue" step="0.01" placeholder="0.00" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Transaction Hash</label>
+                    <input type="text" id="sellTxHash" placeholder="Solana transaction hash" required>
+                </div>
+
+                <button type="submit" class="sell-modal-btn">Complete Sale</button>
+            </form>
+        </div>
+    </div>
+
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
-        import { getFirestore, collection, addDoc, getDocs, query, orderBy, limit } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+        import { getFirestore, collection, addDoc, getDocs, query, orderBy, limit, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
 
         const firebaseConfig = {
             apiKey: "AIzaSyCS3qi9luuIr7WmghMfRXTIxprT4m2v8sQ",
@@ -515,6 +646,9 @@ td {
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        let trades = [];
+        let positions = {};
+
         // Image upload handling for Buy
         let buyImageData = null;
         const buyImageUpload = document.getElementById('buyImageUpload');
@@ -526,38 +660,13 @@ td {
         
         buyImageInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
-            if (file && file.size <= 2 * 1024 * 1024) { // 2MB limit
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    buyImageData = e.target.result; // Store base64 data
-                    buyImagePreviewImg.src = buyImageData;
-                    buyImagePreview.classList.add('show');
-                    buyImageUpload.classList.add('has-image');
-                };
-                reader.readAsDataURL(file);
-            } else {
-                alert('Image must be less than 2MB');
-            }
-        });
-
-        // Image upload handling for Sell
-        let sellImageData = null;
-        const sellImageUpload = document.getElementById('sellImageUpload');
-        const sellImageInput = document.getElementById('sellImageInput');
-        const sellImagePreview = document.getElementById('sellImagePreview');
-        const sellImagePreviewImg = document.getElementById('sellImagePreviewImg');
-
-        sellImageUpload.addEventListener('click', () => sellImageInput.click());
-        
-        sellImageInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
             if (file && file.size <= 2 * 1024 * 1024) {
                 const reader = new FileReader();
                 reader.onload = (e) => {
-                    sellImageData = e.target.result;
-                    sellImagePreviewImg.src = sellImageData;
-                    sellImagePreview.classList.add('show');
-                    sellImageUpload.classList.add('has-image');
+                    buyImageData = e.target.result;
+                    buyImagePreviewImg.src = buyImageData;
+                    buyImagePreview.classList.add('show');
+                    buyImageUpload.classList.add('has-image');
                 };
                 reader.readAsDataURL(file);
             } else {
@@ -585,36 +694,51 @@ td {
                     pricePerToken: pricePerToken,
                     value: totalValue,
                     txHash: txHash,
-                    imageUrl: buyImageData, // Store base64 directly
+                    imageUrl: buyImageData,
                     timestamp: Date.now()
                 };
 
                 await addDoc(collection(db, 'trades'), trade);
                 
-                // Show success message
                 const successMsg = document.getElementById('buySuccessMessage');
                 successMsg.classList.add('show');
                 setTimeout(() => successMsg.classList.remove('show'), 3000);
 
-                // Reset form
                 document.getElementById('buyForm').reset();
                 buyImageData = null;
                 buyImagePreview.classList.remove('show');
                 buyImageUpload.classList.remove('has-image');
                 
-                loadRecentTrades();
+                loadData();
             } catch (error) {
                 console.error('Error adding buy trade:', error);
                 alert('Error adding trade: ' + error.message);
             }
         });
 
+        // Sell Modal
+        const sellModal = document.getElementById('sellModal');
+        document.getElementById('closeSellModal').addEventListener('click', () => {
+            sellModal.classList.remove('active');
+        });
+
+        window.openSellModal = function(symbol, tokenAddress, imageUrl, availableAmount) {
+            document.getElementById('sellModalSymbol').textContent = symbol;
+            document.getElementById('sellTokenAddress').value = tokenAddress;
+            document.getElementById('sellTokenSymbol').value = symbol;
+            document.getElementById('sellTokenImage').value = imageUrl || '';
+            document.getElementById('availableAmount').textContent = availableAmount.toFixed(4);
+            document.getElementById('sellAmount').max = availableAmount;
+            sellModal.classList.add('active');
+        };
+
         // Sell Form Submission
         document.getElementById('sellForm').addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            const ticker = document.getElementById('sellTicker').value.toUpperCase();
+            const ticker = document.getElementById('sellTokenSymbol').value;
             const tokenAddress = document.getElementById('sellTokenAddress').value;
+            const imageUrl = document.getElementById('sellTokenImage').value;
             const amount = parseFloat(document.getElementById('sellAmount').value);
             const totalValue = parseFloat(document.getElementById('sellTotalValue').value);
             const txHash = document.getElementById('sellTxHash').value;
@@ -629,29 +753,92 @@ td {
                     pricePerToken: pricePerToken,
                     value: totalValue,
                     txHash: txHash,
-                    imageUrl: sellImageData, // Store base64 directly
+                    imageUrl: imageUrl,
                     timestamp: Date.now()
                 };
 
                 await addDoc(collection(db, 'trades'), trade);
                 
-                // Show success message
-                const successMsg = document.getElementById('sellSuccessMessage');
-                successMsg.classList.add('show');
-                setTimeout(() => successMsg.classList.remove('show'), 3000);
-
-                // Reset form
+                sellModal.classList.remove('active');
                 document.getElementById('sellForm').reset();
-                sellImageData = null;
-                sellImagePreview.classList.remove('show');
-                sellImageUpload.classList.remove('has-image');
                 
-                loadRecentTrades();
+                loadData();
             } catch (error) {
                 console.error('Error adding sell trade:', error);
                 alert('Error adding trade: ' + error.message);
             }
         });
+
+        // Calculate positions from trades
+        function calculatePositions() {
+            positions = {};
+            
+            trades.forEach(trade => {
+                if (!positions[trade.symbol]) {
+                    positions[trade.symbol] = {
+                        symbol: trade.symbol,
+                        tokenAddress: trade.tokenAddress,
+                        imageUrl: trade.imageUrl || null,
+                        amount: 0,
+                        totalCost: 0,
+                        avgBuyPrice: 0
+                    };
+                }
+                
+                if (trade.imageUrl && !positions[trade.symbol].imageUrl) {
+                    positions[trade.symbol].imageUrl = trade.imageUrl;
+                }
+                
+                if (trade.type === 'BUY') {
+                    positions[trade.symbol].amount += trade.amount;
+                    positions[trade.symbol].totalCost += trade.value;
+                } else if (trade.type === 'SELL') {
+                    positions[trade.symbol].amount -= trade.amount;
+                    positions[trade.symbol].totalCost -= trade.value;
+                }
+                
+                if (positions[trade.symbol].amount > 0) {
+                    positions[trade.symbol].avgBuyPrice = positions[trade.symbol].totalCost / positions[trade.symbol].amount;
+                }
+            });
+            
+            Object.keys(positions).forEach(symbol => {
+                if (positions[symbol].amount <= 0) {
+                    delete positions[symbol];
+                }
+            });
+        }
+
+        // Update holdings list
+        function updateHoldings() {
+            const holdingsList = document.getElementById('holdingsList');
+            const posArray = Object.values(positions);
+            
+            if (posArray.length === 0) {
+                holdingsList.innerHTML = '<div class="no-holdings">No holdings yet</div>';
+                return;
+            }
+            
+            holdingsList.innerHTML = posArray.map(pos => {
+                const currentValue = pos.amount * pos.avgBuyPrice;
+                const pnl = currentValue - pos.totalCost;
+                const pnlPercent = (pnl / pos.totalCost * 100).toFixed(2);
+                const pnlClass = pnl >= 0 ? 'pnl-positive' : 'pnl-negative';
+                
+                return `
+                    <div class="holding-item">
+                        <div class="holding-info">
+                            ${pos.imageUrl ? `<img src="${pos.imageUrl}" class="token-icon" alt="${pos.symbol}">` : ''}
+                            <div class="token-details">
+                                <h3>${pos.symbol}</h3>
+                                <p>${pos.amount.toFixed(4)} tokens • $${currentValue.toFixed(2)} <span class="${pnlClass}">(${pnl >= 0 ? '+' : ''}${pnlPercent}%)</span></p>
+                            </div>
+                        </div>
+                        <button class="sell-btn" onclick="openSellModal('${pos.symbol}', '${pos.tokenAddress}', '${pos.imageUrl || ''}', ${pos.amount})">Sell</button>
+                    </div>
+                `;
+            }).join('');
+        }
 
         // Load recent trades
         async function loadRecentTrades() {
@@ -683,7 +870,7 @@ td {
                         <td><span class="type-badge ${trade.type.toLowerCase()}">${trade.type}</span></td>
                         <td>
                             <div class="token-info">
-                                ${trade.imageUrl ? `<img src="${trade.imageUrl}" class="token-icon" alt="${trade.symbol}">` : ''}
+                                ${trade.imageUrl ? `<img src="${trade.imageUrl}" class="token-icon-small" alt="${trade.symbol}">` : ''}
                                 <strong>${trade.symbol}</strong>
                             </div>
                         </td>
@@ -697,8 +884,39 @@ td {
             }
         }
 
+        // Load all data
+        async function loadData() {
+            try {
+                const tradesQuery = query(collection(db, 'trades'), orderBy('timestamp', 'desc'));
+                const snapshot = await getDocs(tradesQuery);
+                
+                trades = [];
+                snapshot.forEach((doc) => {
+                    trades.push({ id: doc.id, ...doc.data() });
+                });
+                
+                calculatePositions();
+                updateHoldings();
+                loadRecentTrades();
+            } catch (error) {
+                console.error('Error loading data:', error);
+            }
+        }
+
+        // Real-time listener
+        const tradesQuery = query(collection(db, 'trades'), orderBy('timestamp', 'desc'));
+        onSnapshot(tradesQuery, (snapshot) => {
+            trades = [];
+            snapshot.forEach((doc) => {
+                trades.push({ id: doc.id, ...doc.data() });
+            });
+            calculatePositions();
+            updateHoldings();
+            loadRecentTrades();
+        });
+
         // Load on page load
-        loadRecentTrades();
+        loadData();
     </script>
 </body>
 </html>
