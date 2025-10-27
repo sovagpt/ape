@@ -20,7 +20,7 @@ body {
 }
 
 .container {
-    max-width: 900px;
+    max-width: 1400px;
     margin: 0 auto;
 }
 
@@ -41,76 +41,70 @@ h1 {
     font-size: 16px;
 }
 
-.admin-card {
+.back-link {
+    display: inline-block;
+    color: #60a5fa;
+    text-decoration: none;
+    margin-bottom: 32px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.back-link:hover {
+    color: #3b82f6;
+}
+
+.panels-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    margin-bottom: 48px;
+}
+
+.panel {
     background: linear-gradient(145deg, #0f1629 0%, #0a0f1e 100%);
     border: 1px solid rgba(99, 179, 237, 0.15);
     border-radius: 20px;
     padding: 40px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    transition: all 0.3s ease;
 }
 
-.form-group {
-    margin-bottom: 28px;
+.panel:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
 }
 
-.form-group label {
-    display: block;
+.panel.buy-panel {
+    border-top: 3px solid #10b981;
+}
+
+.panel.sell-panel {
+    border-top: 3px solid #ef4444;
+}
+
+.panel-header {
+    margin-bottom: 32px;
+    text-align: center;
+}
+
+.panel-header h2 {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.panel.buy-panel h2 {
+    color: #10b981;
+}
+
+.panel.sell-panel h2 {
+    color: #ef4444;
+}
+
+.panel-header p {
     color: #94a3b8;
-    font-size: 12px;
-    margin-bottom: 10px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-}
-
-.form-group input,
-.form-group select {
-    width: 100%;
-    background: rgba(99, 179, 237, 0.05);
-    border: 1px solid rgba(99, 179, 237, 0.2);
-    color: #e0e7ff;
-    padding: 14px 16px;
-    border-radius: 10px;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-size: 14px;
-    transition: all 0.3s ease;
-}
-
-.form-group input:focus,
-.form-group select:focus {
-    outline: none;
-    border-color: #60a5fa;
-    background: rgba(99, 179, 237, 0.08);
-    box-shadow: 0 0 0 3px rgba(99, 179, 237, 0.1);
-}
-
-.form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-}
-
-.submit-btn {
-    width: 100%;
-    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-    border: none;
-    color: white;
-    padding: 16px;
-    border-radius: 10px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 15px;
-    letter-spacing: 0.3px;
-    text-transform: uppercase;
-    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
-    margin-top: 12px;
-}
-
-.submit-btn:hover {
-    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
 }
 
 .success-message {
@@ -127,10 +121,149 @@ h1 {
 
 .success-message.show {
     display: block;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.form-group {
+    margin-bottom: 24px;
+}
+
+.form-group label {
+    display: block;
+    color: #94a3b8;
+    font-size: 12px;
+    margin-bottom: 10px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    background: rgba(99, 179, 237, 0.05);
+    border: 1px solid rgba(99, 179, 237, 0.2);
+    color: #e0e7ff;
+    padding: 14px 16px;
+    border-radius: 10px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #60a5fa;
+    background: rgba(99, 179, 237, 0.08);
+    box-shadow: 0 0 0 3px rgba(99, 179, 237, 0.1);
+}
+
+.image-upload-area {
+    border: 2px dashed rgba(99, 179, 237, 0.3);
+    border-radius: 10px;
+    padding: 24px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: rgba(99, 179, 237, 0.03);
+}
+
+.image-upload-area:hover {
+    border-color: #60a5fa;
+    background: rgba(99, 179, 237, 0.08);
+}
+
+.image-upload-area.has-image {
+    border-style: solid;
+    border-color: #10b981;
+}
+
+.image-preview {
+    display: none;
+    margin-top: 16px;
+}
+
+.image-preview img {
+    max-width: 100px;
+    max-height: 100px;
+    border-radius: 8px;
+    border: 2px solid rgba(99, 179, 237, 0.2);
+}
+
+.image-preview.show {
+    display: block;
+}
+
+.upload-text {
+    color: #94a3b8;
+    font-size: 13px;
+}
+
+.upload-text strong {
+    color: #60a5fa;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+.submit-btn {
+    width: 100%;
+    border: none;
+    color: white;
+    padding: 16px;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 15px;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    margin-top: 12px;
+}
+
+.buy-panel .submit-btn {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
+}
+
+.buy-panel .submit-btn:hover {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+}
+
+.sell-panel .submit-btn {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    box-shadow: 0 4px 16px rgba(239, 68, 68, 0.3);
+}
+
+.sell-panel .submit-btn:hover {
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
 }
 
 .recent-trades {
-    margin-top: 48px;
     background: linear-gradient(145deg, #0f1629 0%, #0a0f1e 100%);
     border: 1px solid rgba(99, 179, 237, 0.15);
     border-radius: 20px;
@@ -171,6 +304,20 @@ td {
     color: #cbd5e1;
 }
 
+.token-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.token-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(99, 179, 237, 0.2);
+}
+
 .type-badge {
     padding: 5px 12px;
     border-radius: 6px;
@@ -192,17 +339,10 @@ td {
     border: 1px solid rgba(239, 68, 68, 0.3);
 }
 
-.back-link {
-    display: inline-block;
-    color: #60a5fa;
-    text-decoration: none;
-    margin-bottom: 32px;
-    font-weight: 500;
-    transition: all 0.2s ease;
-}
-
-.back-link:hover {
-    color: #3b82f6;
+@media (max-width: 1200px) {
+    .panels-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 @media (max-width: 768px) {
@@ -210,12 +350,8 @@ td {
         padding: 20px;
     }
     
-    .admin-card {
+    .panel {
         padding: 24px;
-    }
-    
-    .form-row {
-        grid-template-columns: 1fr;
     }
 }
     </style>
@@ -226,59 +362,119 @@ td {
         
         <header>
             <h1>APE Admin Panel</h1>
-            <p class="subtitle">Add and manage trading transactions</p>
+            <p class="subtitle">Add buy and sell trades</p>
         </header>
 
-        <div class="success-message" id="successMessage">
-            Trade added successfully!
-        </div>
-
-        <div class="admin-card">
-            <form id="tradeForm">
-                <div class="form-group">
-                    <label>Trade Type</label>
-                    <select id="tradeType" required>
-                        <option value="BUY">BUY</option>
-                        <option value="SELL">SELL</option>
-                    </select>
+        <div class="panels-grid">
+            <!-- BUY PANEL -->
+            <div class="panel buy-panel">
+                <div class="panel-header">
+                    <h2>BUY TRADE</h2>
+                    <p>Record a token purchase</p>
                 </div>
 
-                <div class="form-row">
+                <div class="success-message" id="buySuccessMessage">
+                    Buy trade added successfully!
+                </div>
+
+                <form id="buyForm">
                     <div class="form-group">
-                        <label>Token Symbol</label>
-                        <input type="text" id="tokenSymbol" placeholder="e.g., BONK, WIF, POPCAT" required>
+                        <label>Token Ticker</label>
+                        <input type="text" id="buyTicker" placeholder="e.g., BONK, WIF, POPCAT" required>
                     </div>
 
                     <div class="form-group">
-                        <label>Amount</label>
-                        <input type="number" id="amount" step="0.000001" placeholder="0.00" required>
+                        <label>Token Address</label>
+                        <input type="text" id="buyTokenAddress" placeholder="Solana token address" required>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <label>Token Address</label>
-                    <input type="text" id="tokenAddress" placeholder="Solana token address" required>
-                </div>
-
-                <div class="form-row">
                     <div class="form-group">
-                        <label>Price per Token (USD)</label>
-                        <input type="number" id="pricePerToken" step="0.000001" placeholder="0.00" required>
+                        <label>Amount of Tokens</label>
+                        <input type="number" id="buyAmount" step="0.000001" placeholder="0.00" required>
                     </div>
 
                     <div class="form-group">
                         <label>Total Value (USD)</label>
-                        <input type="number" id="totalValue" placeholder="Auto-calculated" readonly>
+                        <input type="number" id="buyTotalValue" step="0.01" placeholder="0.00" required>
                     </div>
+
+                    <div class="form-group">
+                        <label>Transaction Hash</label>
+                        <input type="text" id="buyTxHash" placeholder="Solana transaction hash" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Token Image</label>
+                        <div class="image-upload-area" id="buyImageUpload">
+                            <input type="file" id="buyImageInput" accept="image/*">
+                            <div class="upload-text">
+                                <strong>Click to upload</strong> or drag and drop<br>
+                                PNG, JPG, WebP (max 2MB)
+                            </div>
+                            <div class="image-preview" id="buyImagePreview">
+                                <img id="buyImagePreviewImg" src="" alt="Preview">
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Add Buy Trade</button>
+                </form>
+            </div>
+
+            <!-- SELL PANEL -->
+            <div class="panel sell-panel">
+                <div class="panel-header">
+                    <h2>SELL TRADE</h2>
+                    <p>Record a token sale</p>
                 </div>
 
-                <div class="form-group">
-                    <label>Transaction Hash</label>
-                    <input type="text" id="txHash" placeholder="Solana transaction hash" required>
+                <div class="success-message" id="sellSuccessMessage">
+                    Sell trade added successfully!
                 </div>
 
-                <button type="submit" class="submit-btn">Add Trade</button>
-            </form>
+                <form id="sellForm">
+                    <div class="form-group">
+                        <label>Token Ticker</label>
+                        <input type="text" id="sellTicker" placeholder="e.g., BONK, WIF, POPCAT" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Token Address</label>
+                        <input type="text" id="sellTokenAddress" placeholder="Solana token address" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Amount of Tokens</label>
+                        <input type="number" id="sellAmount" step="0.000001" placeholder="0.00" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Total Value (USD)</label>
+                        <input type="number" id="sellTotalValue" step="0.01" placeholder="0.00" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Transaction Hash</label>
+                        <input type="text" id="sellTxHash" placeholder="Solana transaction hash" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Token Image</label>
+                        <div class="image-upload-area" id="sellImageUpload">
+                            <input type="file" id="sellImageInput" accept="image/*">
+                            <div class="upload-text">
+                                <strong>Click to upload</strong> or drag and drop<br>
+                                PNG, JPG, WebP (max 2MB)
+                            </div>
+                            <div class="image-preview" id="sellImagePreview">
+                                <img id="sellImagePreviewImg" src="" alt="Preview">
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Add Sell Trade</button>
+                </form>
+            </div>
         </div>
 
         <div class="recent-trades">
@@ -288,7 +484,7 @@ td {
                     <tr>
                         <th>Time</th>
                         <th>Type</th>
-                        <th>Symbol</th>
+                        <th>Token</th>
                         <th>Amount</th>
                         <th>Value</th>
                     </tr>
@@ -305,6 +501,7 @@ td {
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
         import { getFirestore, collection, addDoc, getDocs, query, orderBy, limit } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+        import { getStorage, ref, uploadBytes, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js';
 
         const firebaseConfig = {
             apiKey: "AIzaSyCS3qi9luuIr7WmghMfRXTIxprT4m2v8sQ",
@@ -318,51 +515,163 @@ td {
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+        const storage = getStorage(app);
 
-        // Auto-calculate total value
-        const amountInput = document.getElementById('amount');
-        const priceInput = document.getElementById('pricePerToken');
-        const totalInput = document.getElementById('totalValue');
+        // Image upload handling for Buy
+        let buyImageFile = null;
+        const buyImageUpload = document.getElementById('buyImageUpload');
+        const buyImageInput = document.getElementById('buyImageInput');
+        const buyImagePreview = document.getElementById('buyImagePreview');
+        const buyImagePreviewImg = document.getElementById('buyImagePreviewImg');
 
-        function calculateTotal() {
-            const amount = parseFloat(amountInput.value) || 0;
-            const price = parseFloat(priceInput.value) || 0;
-            totalInput.value = (amount * price).toFixed(2);
+        buyImageUpload.addEventListener('click', () => buyImageInput.click());
+        
+        buyImageInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file && file.size <= 2 * 1024 * 1024) { // 2MB limit
+                buyImageFile = file;
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    buyImagePreviewImg.src = e.target.result;
+                    buyImagePreview.classList.add('show');
+                    buyImageUpload.classList.add('has-image');
+                };
+                reader.readAsDataURL(file);
+            } else {
+                alert('Image must be less than 2MB');
+            }
+        });
+
+        // Image upload handling for Sell
+        let sellImageFile = null;
+        const sellImageUpload = document.getElementById('sellImageUpload');
+        const sellImageInput = document.getElementById('sellImageInput');
+        const sellImagePreview = document.getElementById('sellImagePreview');
+        const sellImagePreviewImg = document.getElementById('sellImagePreviewImg');
+
+        sellImageUpload.addEventListener('click', () => sellImageInput.click());
+        
+        sellImageInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file && file.size <= 2 * 1024 * 1024) {
+                sellImageFile = file;
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    sellImagePreviewImg.src = e.target.result;
+                    sellImagePreview.classList.add('show');
+                    sellImageUpload.classList.add('has-image');
+                };
+                reader.readAsDataURL(file);
+            } else {
+                alert('Image must be less than 2MB');
+            }
+        });
+
+        // Upload image to Firebase Storage
+        async function uploadTokenImage(file, tokenAddress) {
+            if (!file) return null;
+            
+            const storageRef = ref(storage, `tokens/${tokenAddress}_${Date.now()}`);
+            await uploadBytes(storageRef, file);
+            return await getDownloadURL(storageRef);
         }
 
-        amountInput.addEventListener('input', calculateTotal);
-        priceInput.addEventListener('input', calculateTotal);
-
-        // Form submission
-        document.getElementById('tradeForm').addEventListener('submit', async (e) => {
+        // Buy Form Submission
+        document.getElementById('buyForm').addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            const trade = {
-                type: document.getElementById('tradeType').value,
-                symbol: document.getElementById('tokenSymbol').value.toUpperCase(),
-                tokenAddress: document.getElementById('tokenAddress').value,
-                amount: parseFloat(document.getElementById('amount').value),
-                pricePerToken: parseFloat(document.getElementById('pricePerToken').value),
-                txHash: document.getElementById('txHash').value,
-                timestamp: Date.now(),
-                value: parseFloat(document.getElementById('amount').value) * parseFloat(document.getElementById('pricePerToken').value)
-            };
+            const ticker = document.getElementById('buyTicker').value.toUpperCase();
+            const tokenAddress = document.getElementById('buyTokenAddress').value;
+            const amount = parseFloat(document.getElementById('buyAmount').value);
+            const totalValue = parseFloat(document.getElementById('buyTotalValue').value);
+            const txHash = document.getElementById('buyTxHash').value;
+            const pricePerToken = totalValue / amount;
 
             try {
+                // Upload image if provided
+                let imageUrl = null;
+                if (buyImageFile) {
+                    imageUrl = await uploadTokenImage(buyImageFile, tokenAddress);
+                }
+
+                const trade = {
+                    type: 'BUY',
+                    symbol: ticker,
+                    tokenAddress: tokenAddress,
+                    amount: amount,
+                    pricePerToken: pricePerToken,
+                    value: totalValue,
+                    txHash: txHash,
+                    imageUrl: imageUrl,
+                    timestamp: Date.now()
+                };
+
                 await addDoc(collection(db, 'trades'), trade);
                 
                 // Show success message
-                const successMsg = document.getElementById('successMessage');
+                const successMsg = document.getElementById('buySuccessMessage');
                 successMsg.classList.add('show');
                 setTimeout(() => successMsg.classList.remove('show'), 3000);
 
                 // Reset form
-                document.getElementById('tradeForm').reset();
+                document.getElementById('buyForm').reset();
+                buyImageFile = null;
+                buyImagePreview.classList.remove('show');
+                buyImageUpload.classList.remove('has-image');
                 
-                // Reload recent trades
                 loadRecentTrades();
             } catch (error) {
-                console.error('Error adding trade:', error);
+                console.error('Error adding buy trade:', error);
+                alert('Error adding trade: ' + error.message);
+            }
+        });
+
+        // Sell Form Submission
+        document.getElementById('sellForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const ticker = document.getElementById('sellTicker').value.toUpperCase();
+            const tokenAddress = document.getElementById('sellTokenAddress').value;
+            const amount = parseFloat(document.getElementById('sellAmount').value);
+            const totalValue = parseFloat(document.getElementById('sellTotalValue').value);
+            const txHash = document.getElementById('sellTxHash').value;
+            const pricePerToken = totalValue / amount;
+
+            try {
+                // Upload image if provided
+                let imageUrl = null;
+                if (sellImageFile) {
+                    imageUrl = await uploadTokenImage(sellImageFile, tokenAddress);
+                }
+
+                const trade = {
+                    type: 'SELL',
+                    symbol: ticker,
+                    tokenAddress: tokenAddress,
+                    amount: amount,
+                    pricePerToken: pricePerToken,
+                    value: totalValue,
+                    txHash: txHash,
+                    imageUrl: imageUrl,
+                    timestamp: Date.now()
+                };
+
+                await addDoc(collection(db, 'trades'), trade);
+                
+                // Show success message
+                const successMsg = document.getElementById('sellSuccessMessage');
+                successMsg.classList.add('show');
+                setTimeout(() => successMsg.classList.remove('show'), 3000);
+
+                // Reset form
+                document.getElementById('sellForm').reset();
+                sellImageFile = null;
+                sellImagePreview.classList.remove('show');
+                sellImageUpload.classList.remove('has-image');
+                
+                loadRecentTrades();
+            } catch (error) {
+                console.error('Error adding sell trade:', error);
                 alert('Error adding trade: ' + error.message);
             }
         });
@@ -395,7 +704,12 @@ td {
                     row.innerHTML = `
                         <td>${time}</td>
                         <td><span class="type-badge ${trade.type.toLowerCase()}">${trade.type}</span></td>
-                        <td><strong>${trade.symbol}</strong></td>
+                        <td>
+                            <div class="token-info">
+                                ${trade.imageUrl ? `<img src="${trade.imageUrl}" class="token-icon" alt="${trade.symbol}">` : ''}
+                                <strong>${trade.symbol}</strong>
+                            </div>
+                        </td>
                         <td>${trade.amount.toFixed(4)}</td>
                         <td>$${trade.value.toFixed(2)}</td>
                     `;
