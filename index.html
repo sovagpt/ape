@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>APE - Automated Portfolio Engineer</title>
-    <link rel="icon" type="image/png" href="https://cdn.prod.website-files.com/674396c59212c6ea348b24e0/68fec6c9ad0908d8066ce79f_c-removebg-preview%20(1).png">
     <style>
 * {
     margin: 0;
@@ -473,10 +472,6 @@ header {
 
 .toast.sell {
     border-left: 4px solid #ef4444;
-}
-
-.toast-icon {
-    font-size: 24px;
 }
 
 .toast-content h4 {
@@ -1128,15 +1123,14 @@ let tokenPrices = {};
 let solPrice = 0;
 
 // Toast notification function
-function showToast(type, symbol, details) {
+function showToast(type, symbol, details, imageUrl) {
     const toast = document.createElement('div');
     toast.className = `toast ${type}`;
     
-    const icon = type === 'buy' ? '🟢' : '🔴';
     const action = type === 'buy' ? 'Bought' : 'Sold';
     
     toast.innerHTML = `
-        <div class="toast-icon">${icon}</div>
+        <img src="${imageUrl}" class="toast-icon" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid ${type === 'buy' ? '#10b981' : '#ef4444'};" onerror="this.src='https://via.placeholder.com/40/1e293b/60a5fa?text=${symbol.charAt(0)}'">
         <div class="toast-content">
             <h4>${action} ${symbol}</h4>
             <p>${details}</p>
@@ -1186,17 +1180,17 @@ onSnapshot(query(collection(db, 'activities'), orderBy('timestamp', 'desc'), lim
             
             if (activity.type === 'SCAN') {
                 if (activity.status === 'analyzing') {
-                    addToTerminal('SCAN', symbol, `Analyzing $${symbol}...`, 'analyzing');
+                    addToTerminal('SCAN', symbol, `Analyzing $${symbol} (${activity.tokenAddress})...`, 'analyzing');
                 } else if (activity.status === 'passing') {
-                    addToTerminal('SCAN', symbol, `Passing on $${symbol}`, 'passing');
+                    addToTerminal('SCAN', symbol, `Passing on $${symbol} (${activity.tokenAddress})`, 'passing');
                 }
             } else if (activity.type === 'BUY') {
                 addToTerminal('BUY', symbol, `Bought ${activity.amount} $${symbol} @ $${activity.price}`);
-                showToast('buy', `$${symbol}`, `${activity.amount} tokens @ $${activity.price}`);
+                showToast('buy', `$${symbol}`, `${activity.amount} tokens @ $${activity.price}`, activity.imageUrl || 'https://via.placeholder.com/40/1e293b/60a5fa?text=' + symbol.charAt(0));
             } else if (activity.type === 'SELL') {
                 const pnl = activity.pnl ? ` (${activity.pnl >= 0 ? '+' : ''}${activity.pnl.toFixed(2)}%)` : '';
                 addToTerminal('SELL', symbol, `Sold ${activity.amount} $${symbol} @ $${activity.price}${pnl}`);
-                showToast('sell', `$${symbol}`, `${activity.amount} tokens @ $${activity.price}${pnl}`);
+                showToast('sell', `$${symbol}`, `${activity.amount} tokens @ $${activity.price}${pnl}`, activity.imageUrl || 'https://via.placeholder.com/40/1e293b/60a5fa?text=' + symbol.charAt(0));
             }
         }
     });
