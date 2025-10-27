@@ -501,7 +501,6 @@ td {
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
         import { getFirestore, collection, addDoc, getDocs, query, orderBy, limit } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
-        import { getStorage, ref, uploadBytes, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js';
 
         const firebaseConfig = {
             apiKey: "AIzaSyCS3qi9luuIr7WmghMfRXTIxprT4m2v8sQ",
@@ -515,10 +514,9 @@ td {
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        const storage = getStorage(app);
 
         // Image upload handling for Buy
-        let buyImageFile = null;
+        let buyImageData = null;
         const buyImageUpload = document.getElementById('buyImageUpload');
         const buyImageInput = document.getElementById('buyImageInput');
         const buyImagePreview = document.getElementById('buyImagePreview');
@@ -529,10 +527,10 @@ td {
         buyImageInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (file && file.size <= 2 * 1024 * 1024) { // 2MB limit
-                buyImageFile = file;
                 const reader = new FileReader();
                 reader.onload = (e) => {
-                    buyImagePreviewImg.src = e.target.result;
+                    buyImageData = e.target.result; // Store base64 data
+                    buyImagePreviewImg.src = buyImageData;
                     buyImagePreview.classList.add('show');
                     buyImageUpload.classList.add('has-image');
                 };
@@ -543,7 +541,7 @@ td {
         });
 
         // Image upload handling for Sell
-        let sellImageFile = null;
+        let sellImageData = null;
         const sellImageUpload = document.getElementById('sellImageUpload');
         const sellImageInput = document.getElementById('sellImageInput');
         const sellImagePreview = document.getElementById('sellImagePreview');
@@ -554,10 +552,10 @@ td {
         sellImageInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (file && file.size <= 2 * 1024 * 1024) {
-                sellImageFile = file;
                 const reader = new FileReader();
                 reader.onload = (e) => {
-                    sellImagePreviewImg.src = e.target.result;
+                    sellImageData = e.target.result;
+                    sellImagePreviewImg.src = sellImageData;
                     sellImagePreview.classList.add('show');
                     sellImageUpload.classList.add('has-image');
                 };
@@ -566,15 +564,6 @@ td {
                 alert('Image must be less than 2MB');
             }
         });
-
-        // Upload image to Firebase Storage
-        async function uploadTokenImage(file, tokenAddress) {
-            if (!file) return null;
-            
-            const storageRef = ref(storage, `tokens/${tokenAddress}_${Date.now()}`);
-            await uploadBytes(storageRef, file);
-            return await getDownloadURL(storageRef);
-        }
 
         // Buy Form Submission
         document.getElementById('buyForm').addEventListener('submit', async (e) => {
@@ -588,12 +577,6 @@ td {
             const pricePerToken = totalValue / amount;
 
             try {
-                // Upload image if provided
-                let imageUrl = null;
-                if (buyImageFile) {
-                    imageUrl = await uploadTokenImage(buyImageFile, tokenAddress);
-                }
-
                 const trade = {
                     type: 'BUY',
                     symbol: ticker,
@@ -602,7 +585,7 @@ td {
                     pricePerToken: pricePerToken,
                     value: totalValue,
                     txHash: txHash,
-                    imageUrl: imageUrl,
+                    imageUrl: buyImageData, // Store base64 directly
                     timestamp: Date.now()
                 };
 
@@ -615,7 +598,7 @@ td {
 
                 // Reset form
                 document.getElementById('buyForm').reset();
-                buyImageFile = null;
+                buyImageData = null;
                 buyImagePreview.classList.remove('show');
                 buyImageUpload.classList.remove('has-image');
                 
@@ -638,12 +621,6 @@ td {
             const pricePerToken = totalValue / amount;
 
             try {
-                // Upload image if provided
-                let imageUrl = null;
-                if (sellImageFile) {
-                    imageUrl = await uploadTokenImage(sellImageFile, tokenAddress);
-                }
-
                 const trade = {
                     type: 'SELL',
                     symbol: ticker,
@@ -652,7 +629,7 @@ td {
                     pricePerToken: pricePerToken,
                     value: totalValue,
                     txHash: txHash,
-                    imageUrl: imageUrl,
+                    imageUrl: sellImageData, // Store base64 directly
                     timestamp: Date.now()
                 };
 
@@ -665,7 +642,7 @@ td {
 
                 // Reset form
                 document.getElementById('sellForm').reset();
-                sellImageFile = null;
+                sellImageData = null;
                 sellImagePreview.classList.remove('show');
                 sellImageUpload.classList.remove('has-image');
                 
