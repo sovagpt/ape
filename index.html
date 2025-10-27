@@ -13,7 +13,7 @@
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', 'Helvetica Neue', sans-serif;
-    background: #050811;
+    background: #0d1217;
     color: #e0e7ff;
     overflow-x: hidden;
     line-height: 1.6;
@@ -21,7 +21,7 @@ body {
 
 /* Ticker Widget Container */
 .ticker-widget {
-    background: linear-gradient(180deg, #0a0f1e 0%, #080d1a 100%);
+    background: linear-gradient(180deg, #161b22 0%, #0d1217 100%);
     border-bottom: 1px solid rgba(99, 179, 237, 0.1);
     padding: 12px 0;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
@@ -32,7 +32,7 @@ body {
 
 /* Header */
 header {
-    background: linear-gradient(180deg, #0a0f1e 0%, #080d1a 100%);
+    background: linear-gradient(180deg, #161b22 0%, #0d1217 100%);
     border-bottom: 1px solid rgba(99, 179, 237, 0.1);
     padding: 24px 48px;
     display: flex;
@@ -167,7 +167,7 @@ header {
 }
 
 .monitor-card {
-    background: linear-gradient(145deg, #0f1629 0%, #0a0f1e 100%);
+    background: linear-gradient(145deg, #161b22 0%, #161b22 100%);
     border: 1px solid rgba(99, 179, 237, 0.15);
     border-radius: 16px;
     padding: 28px;
@@ -243,7 +243,7 @@ header {
 }
 
 .stat-card {
-    background: linear-gradient(145deg, #0f1629 0%, #0a0f1e 100%);
+    background: linear-gradient(145deg, #161b22 0%, #161b22 100%);
     border: 1px solid rgba(99, 179, 237, 0.15);
     border-radius: 16px;
     padding: 24px;
@@ -289,7 +289,7 @@ header {
 }
 
 .positions-card, .transactions-card {
-    background: linear-gradient(145deg, #0f1629 0%, #0a0f1e 100%);
+    background: linear-gradient(145deg, #161b22 0%, #161b22 100%);
     border: 1px solid rgba(99, 179, 237, 0.15);
     border-radius: 16px;
     padding: 28px;
@@ -408,7 +408,7 @@ td {
 }
 
 .modal-content {
-    background: linear-gradient(145deg, #0f1629 0%, #0a0f1e 100%);
+    background: linear-gradient(145deg, #161b22 0%, #161b22 100%);
     border: 1px solid rgba(99, 179, 237, 0.2);
     border-radius: 20px;
     width: 90%;
@@ -549,19 +549,22 @@ td {
 
     <header>
         <div class="header-left">
-            <h1>APE</h1>
+            <h1 style="font-size: 0; width: 120px; height: 40px; background-image: url('https://cdn.prod.website-files.com/674396c59212c6ea348b24e0/68febf055c02b3bda0d2f563_APE-CEO-27-10-2025.png'); background-size: contain; background-repeat: no-repeat; background-position: center;">APE</h1>
             <span class="status-badge live">LIVE</span>
             <span class="timer" id="timer">00:00:00</span>
         </div>
         <div class="header-right">
             <button class="icon-btn" id="aboutBtn" title="About APE.CEO">
-                <img src="https://cdn.prod.website-files.com/674396c59212c6ea348b24e0/68febd1d5ad6bebbd1212f20_aboutlogo.png" alt="About" style="width: 20px; height: 20px;">
+                <img src="https://cdn.prod.website-files.com/674396c59212c6ea348b24e0/68febd1d5ad6bebbd1212f20_aboutlogo.png" alt="About" style="width: 24px; height: 24px;">
             </button>
             <button class="icon-btn" id="twitterBtn" title="Twitter">
-                <img src="https://cdn.prod.website-files.com/674396c59212c6ea348b24e0/68f0312508af2b44d3e4a00f_twitter.png" alt="Twitter" style="width: 20px; height: 20px;">
+                <img src="https://cdn.prod.website-files.com/674396c59212c6ea348b24e0/68f0312508af2b44d3e4a00f_twitter.png" alt="Twitter" style="width: 24px; height: 24px;">
             </button>
             <button class="icon-btn" id="pumpBtn" title="Pump.fun">
-                <img src="https://cdn.prod.website-files.com/674396c59212c6ea348b24e0/68f031318d027fae9e71040d_pumpfunnnn.png" alt="Pump.fun" style="width: 20px; height: 20px;">
+                <img src="https://cdn.prod.website-files.com/674396c59212c6ea348b24e0/68f031318d027fae9e71040d_pumpfunnnn.png" alt="Pump.fun" style="width: 24px; height: 24px;">
+            </button>
+            <button class="icon-btn" id="solscanBtn" title="Solscan">
+                <img src="https://cdn.prod.website-files.com/674396c59212c6ea348b24e0/68febf5334da8b2532a7045c_pumpfun%20(1).png" alt="Solscan" style="width: 24px; height: 24px;">
             </button>
             <span class="wallet-address" id="walletAddress">Loading...</span>
             <span class="api-status">API Status</span>
@@ -871,6 +874,11 @@ function setupEventListeners() {
     // Pump.fun button
     document.getElementById('pumpBtn').addEventListener('click', () => {
         window.open('https://pump.fun', '_blank');
+    });
+    
+    // Solscan button
+    document.getElementById('solscanBtn').addEventListener('click', () => {
+        window.open('https://solscan.io', '_blank');
     });
     
     // Refresh button
