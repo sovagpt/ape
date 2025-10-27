@@ -27,6 +27,7 @@ body {
 header {
     text-align: center;
     margin-bottom: 48px;
+    position: relative;
 }
 
 h1 {
@@ -39,6 +40,30 @@ h1 {
 .subtitle {
     color: #94a3b8;
     font-size: 16px;
+}
+
+.reset-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 13px;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+}
+
+.reset-btn:hover {
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(239, 68, 68, 0.5);
 }
 
 .back-link {
@@ -503,6 +528,7 @@ td {
         <header>
             <h1>APE Admin Panel</h1>
             <p class="subtitle">Add trades and manage holdings</p>
+            <button class="reset-btn" id="resetBtn">🔄 RESET ALL DATA</button>
         </header>
 
         <div class="panels-grid">
@@ -536,6 +562,11 @@ td {
                     <div class="form-group">
                         <label>Total Value (USD)</label>
                         <input type="number" id="buyTotalValue" step="0.01" placeholder="0.00" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Total Value (SOL)</label>
+                        <input type="number" id="buySolValue" step="0.000001" placeholder="0.00" required>
                     </div>
 
                     <div class="form-group">
@@ -623,6 +654,11 @@ td {
                 </div>
 
                 <div class="form-group">
+                    <label>Total Value (SOL)</label>
+                    <input type="number" id="sellSolValue" step="0.000001" placeholder="0.00" required>
+                </div>
+
+                <div class="form-group">
                     <label>Transaction Hash</label>
                     <input type="text" id="sellTxHash" placeholder="Solana transaction hash" required>
                 </div>
@@ -634,7 +670,7 @@ td {
 
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
-        import { getFirestore, collection, addDoc, getDocs, query, orderBy, limit, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+        import { getFirestore, collection, addDoc, getDocs, query, orderBy, limit, onSnapshot, deleteDoc } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
 
         const firebaseConfig = {
             apiKey: "AIzaSyCS3qi9luuIr7WmghMfRXTIxprT4m2v8sQ",
@@ -651,6 +687,35 @@ td {
 
         let trades = [];
         let positions = {};
+
+        // Reset button functionality
+        document.getElementById('resetBtn').addEventListener('click', async () => {
+            if (confirm('⚠️ WARNING: This will delete ALL trades and reset ALL data. This cannot be undone. Are you sure?')) {
+                if (confirm('Final confirmation: Delete everything?')) {
+                    try {
+                        // Delete all trades
+                        const tradesQuery = query(collection(db, 'trades'));
+                        const snapshot = await getDocs(tradesQuery);
+                        
+                        const deletePromises = [];
+                        snapshot.forEach((doc) => {
+                            deletePromises.push(deleteDoc(doc.ref));
+                        });
+                        
+                        await Promise.all(deletePromises);
+                        
+                        // Reset timer in localStorage
+                        localStorage.removeItem('apeStartTime');
+                        
+                        alert('✅ All data has been reset successfully!');
+                        location.reload();
+                    } catch (error) {
+                        console.error('Error resetting data:', error);
+                        alert('Error resetting data: ' + error.message);
+                    }
+                }
+            }
+        });
 
         // Image upload handling for Buy
         let buyImageData = null;
@@ -685,6 +750,7 @@ td {
             const tokenAddress = document.getElementById('buyTokenAddress').value;
             const amount = parseFloat(document.getElementById('buyAmount').value);
             const totalValue = parseFloat(document.getElementById('buyTotalValue').value);
+            const solValue = parseFloat(document.getElementById('buySolValue').value);
             const txHash = document.getElementById('buyTxHash').value;
             const pricePerToken = totalValue / amount;
 
@@ -696,6 +762,7 @@ td {
                     amount: amount,
                     pricePerToken: pricePerToken,
                     value: totalValue,
+                    solValue: solValue,
                     txHash: txHash,
                     imageUrl: buyImageData,
                     timestamp: Date.now()
@@ -752,6 +819,7 @@ td {
             const imageUrl = document.getElementById('sellTokenImage').value;
             const amount = parseFloat(document.getElementById('sellAmount').value);
             const totalValue = parseFloat(document.getElementById('sellTotalValue').value);
+            const solValue = parseFloat(document.getElementById('sellSolValue').value);
             const txHash = document.getElementById('sellTxHash').value;
             const pricePerToken = totalValue / amount;
 
@@ -763,6 +831,7 @@ td {
                     amount: amount,
                     pricePerToken: pricePerToken,
                     value: totalValue,
+                    solValue: solValue,
                     txHash: txHash,
                     imageUrl: imageUrl,
                     timestamp: Date.now()
