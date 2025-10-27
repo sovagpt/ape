@@ -554,8 +554,15 @@ td {
             <span class="timer" id="timer">00:00:00</span>
         </div>
         <div class="header-right">
-            <button class="icon-btn" id="settingsBtn">⚙</button>
-            <button class="icon-btn" id="chartBtn">▦</button>
+            <button class="icon-btn" id="aboutBtn" title="About APE.CEO">
+                <img src="https://cdn.prod.website-files.com/674396c59212c6ea348b24e0/68febd1d5ad6bebbd1212f20_aboutlogo.png" alt="About" style="width: 20px; height: 20px;">
+            </button>
+            <button class="icon-btn" id="twitterBtn" title="Twitter">
+                <img src="https://cdn.prod.website-files.com/674396c59212c6ea348b24e0/68f0312508af2b44d3e4a00f_twitter.png" alt="Twitter" style="width: 20px; height: 20px;">
+            </button>
+            <button class="icon-btn" id="pumpBtn" title="Pump.fun">
+                <img src="https://cdn.prod.website-files.com/674396c59212c6ea348b24e0/68f031318d027fae9e71040d_pumpfunnnn.png" alt="Pump.fun" style="width: 20px; height: 20px;">
+            </button>
             <span class="wallet-address" id="walletAddress">Loading...</span>
             <span class="api-status">API Status</span>
             <button class="refresh-btn" id="refreshBtn">↻ REFRESH</button>
@@ -675,6 +682,131 @@ td {
         </div>
     </main>
 
+    <!-- About Modal -->
+    <div class="modal" id="aboutModal">
+        <div class="modal-content" style="max-width: 900px;">
+            <button class="close-btn" id="closeAboutModal">&times;</button>
+            <div class="modal-header">
+                <h2>About APE.CEO</h2>
+                <p>Autonomous Portfolio Engineer</p>
+            </div>
+            <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+                <div style="margin-bottom: 32px;">
+                    <h3 style="color: #60a5fa; font-size: 20px; margin-bottom: 16px;">What is APE.CEO?</h3>
+                    <p style="color: #cbd5e1; line-height: 1.8; margin-bottom: 16px;">
+                        APE.CEO is an advanced autonomous trading system built on Solana, designed to navigate the volatile memecoin market with precision and speed. 
+                        Using cutting-edge AI algorithms and real-time market analysis, APE executes trades 24/7 without human intervention.
+                    </p>
+                    <p style="color: #cbd5e1; line-height: 1.8;">
+                        The system operates with a starting capital of 5 SOL, employing sophisticated risk management strategies and position sizing algorithms 
+                        to maximize returns while minimizing downside exposure. Every trade is transparent, verifiable on-chain, and tracked in real-time on this dashboard.
+                    </p>
+                </div>
+
+                <div style="margin-bottom: 32px;">
+                    <h3 style="color: #60a5fa; font-size: 20px; margin-bottom: 16px;">Technical Architecture</h3>
+                    <div style="background: rgba(99, 179, 237, 0.05); border: 1px solid rgba(99, 179, 237, 0.2); border-radius: 12px; padding: 24px; margin-bottom: 16px;">
+                        <h4 style="color: #10b981; font-size: 16px; margin-bottom: 12px; font-family: 'Monaco', monospace;">Core Trading Engine</h4>
+                        <pre style="background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(99, 179, 237, 0.3); border-radius: 8px; padding: 16px; overflow-x: auto; color: #e0e7ff; font-size: 13px; line-height: 1.6;"><code>use solana_sdk::{
+    signature::{Keypair, Signer},
+    transaction::Transaction,
+    pubkey::Pubkey,
+};
+use anchor_lang::prelude::*;
+
+#[program]
+pub mod ape_trading_bot {
+    use super::*;
+
+    pub fn execute_trade(
+        ctx: Context<ExecuteTrade>,
+        token_mint: Pubkey,
+        amount: u64,
+        max_slippage: u16,
+    ) -> Result<()> {
+        let trade_data = &mut ctx.accounts.trade_data;
+        
+        // Risk management check
+        require!(
+            amount <= trade_data.max_position_size,
+            ErrorCode::ExceedsMaxPosition
+        );
+        
+        // Execute swap via Jupiter
+        let swap_ix = create_swap_instruction(
+            &token_mint,
+            amount,
+            max_slippage,
+        )?;
+        
+        // Log trade for transparency
+        emit!(TradeExecuted {
+            token: token_mint,
+            amount,
+            timestamp: Clock::get()?.unix_timestamp,
+        });
+        
+        Ok(())
+    }
+}
+
+#[derive(Accounts)]
+pub struct ExecuteTrade<'info> {
+    #[account(mut)]
+    pub authority: Signer<'info>,
+    #[account(mut)]
+    pub trade_data: Account<'info, TradeData>,
+    pub system_program: Program<'info, System>,
+}
+
+#[account]
+pub struct TradeData {
+    pub authority: Pubkey,
+    pub total_trades: u64,
+    pub max_position_size: u64,
+    pub win_rate: u16,
+}</code></pre>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 32px;">
+                    <h3 style="color: #60a5fa; font-size: 20px; margin-bottom: 16px;">Key Features</h3>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
+                        <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 10px; padding: 20px;">
+                            <h4 style="color: #10b981; font-size: 16px; margin-bottom: 8px;">⚡ Real-Time Execution</h4>
+                            <p style="color: #94a3b8; font-size: 14px;">Sub-second trade execution on Solana's high-performance blockchain</p>
+                        </div>
+                        <div style="background: rgba(96, 165, 250, 0.1); border: 1px solid rgba(96, 165, 250, 0.3); border-radius: 10px; padding: 20px;">
+                            <h4 style="color: #60a5fa; font-size: 16px; margin-bottom: 8px;">🔒 Transparent Operations</h4>
+                            <p style="color: #94a3b8; font-size: 14px;">Every trade verifiable on-chain with full transaction history</p>
+                        </div>
+                        <div style="background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 10px; padding: 20px;">
+                            <h4 style="color: #a78bfa; font-size: 16px; margin-bottom: 8px;">🤖 AI-Powered Analysis</h4>
+                            <p style="color: #94a3b8; font-size: 14px;">Advanced machine learning models analyze market sentiment and trends</p>
+                        </div>
+                        <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 10px; padding: 20px;">
+                            <h4 style="color: #ef4444; font-size: 16px; margin-bottom: 8px;">📊 Risk Management</h4>
+                            <p style="color: #94a3b8; font-size: 14px;">Dynamic position sizing and stop-loss mechanisms protect capital</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 24px;">
+                    <h3 style="color: #60a5fa; font-size: 20px; margin-bottom: 16px;">Performance Metrics</h3>
+                    <p style="color: #cbd5e1; line-height: 1.8;">
+                        APE.CEO tracks comprehensive performance metrics including win rate, profit/loss ratios, Sharpe ratio, maximum drawdown, 
+                        and average holding period. The system continuously learns from each trade, adapting its strategies to evolving market conditions.
+                    </p>
+                </div>
+
+                <div style="text-align: center; padding: 24px; background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(96, 165, 250, 0.1) 100%); border-radius: 12px; border: 1px solid rgba(99, 179, 237, 0.2);">
+                    <p style="color: #60a5fa; font-size: 14px; font-weight: 600; margin-bottom: 8px;">Built on Solana | Powered by AI | 100% Transparent</p>
+                    <p style="color: #94a3b8; font-size: 12px;">All trades are executed on-chain and verifiable via Solscan</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://widgets.coingecko.com/gecko-coin-price-marquee-widget.js"></script>
     <script type="module">
 // Firebase Configuration
@@ -708,6 +840,13 @@ document.addEventListener('DOMContentLoaded', () => {
     startTimer();
     loadData();
     updatePricesLoop();
+    
+    // Admin access via Ctrl+Shift+A
+    document.addEventListener('keydown', (e) => {
+        if (e.ctrlKey && e.shiftKey && e.key === 'A') {
+            window.location.href = 'admin.html';
+        }
+    });
 });
 
 function initApp() {
@@ -715,9 +854,23 @@ function initApp() {
 }
 
 function setupEventListeners() {
-    // Settings button goes to admin page
-    document.getElementById('settingsBtn').addEventListener('click', () => {
-        window.location.href = 'admin.html';
+    // About button opens modal
+    document.getElementById('aboutBtn').addEventListener('click', () => {
+        document.getElementById('aboutModal').classList.add('active');
+    });
+    
+    document.getElementById('closeAboutModal').addEventListener('click', () => {
+        document.getElementById('aboutModal').classList.remove('active');
+    });
+    
+    // Twitter button
+    document.getElementById('twitterBtn').addEventListener('click', () => {
+        window.open('https://twitter.com', '_blank');
+    });
+    
+    // Pump.fun button
+    document.getElementById('pumpBtn').addEventListener('click', () => {
+        window.open('https://pump.fun', '_blank');
     });
     
     // Refresh button
@@ -726,23 +879,34 @@ function setupEventListeners() {
         updatePrices();
     });
     
-    // Chart button (placeholder for future feature)
-    document.getElementById('chartBtn').addEventListener('click', () => {
-        console.log('Charts coming soon');
+    // Close modal on outside click
+    document.getElementById('aboutModal').addEventListener('click', (e) => {
+        if (e.target.id === 'aboutModal') {
+            document.getElementById('aboutModal').classList.remove('active');
+        }
     });
 }
 
-// Timer
+// Timer - persistent across page loads
 function startTimer() {
-    const startTime = Date.now();
-    setInterval(() => {
+    // Store start time in localStorage if not already set
+    if (!localStorage.getItem('apeStartTime')) {
+        localStorage.setItem('apeStartTime', Date.now());
+    }
+    
+    const startTime = parseInt(localStorage.getItem('apeStartTime'));
+    
+    function updateTimer() {
         const elapsed = Date.now() - startTime;
         const hours = Math.floor(elapsed / 3600000);
         const minutes = Math.floor((elapsed % 3600000) / 60000);
         const seconds = Math.floor((elapsed % 60000) / 1000);
         document.getElementById('timer').textContent = 
             `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-    }, 1000);
+    }
+    
+    updateTimer();
+    setInterval(updateTimer, 1000);
 }
 
 // Admin Panel
