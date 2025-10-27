@@ -610,7 +610,10 @@ td {
                 
                 <div class="form-group">
                     <label>Amount of Tokens to Sell</label>
-                    <input type="number" id="sellAmount" step="0.000001" placeholder="0.00" required>
+                    <div style="display: flex; gap: 12px; align-items: flex-end;">
+                        <input type="number" id="sellAmount" step="0.000001" placeholder="0.00" required style="flex: 1;">
+                        <button type="button" id="sellAllBtn" style="background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%); border: none; color: white; padding: 14px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 12px; letter-spacing: 0.3px; text-transform: uppercase; white-space: nowrap; box-shadow: 0 2px 8px rgba(96, 165, 250, 0.3); transition: all 0.3s ease;">SELL ALL</button>
+                    </div>
                     <p style="font-size: 12px; color: #94a3b8; margin-top: 8px;">Available: <span id="availableAmount">0</span></p>
                 </div>
 
@@ -722,7 +725,10 @@ td {
             sellModal.classList.remove('active');
         });
 
+        let currentAvailableAmount = 0;
+
         window.openSellModal = function(symbol, tokenAddress, imageUrl, availableAmount) {
+            currentAvailableAmount = availableAmount;
             document.getElementById('sellModalSymbol').textContent = symbol;
             document.getElementById('sellTokenAddress').value = tokenAddress;
             document.getElementById('sellTokenSymbol').value = symbol;
@@ -731,6 +737,11 @@ td {
             document.getElementById('sellAmount').max = availableAmount;
             sellModal.classList.add('active');
         };
+
+        // SELL ALL button
+        document.getElementById('sellAllBtn').addEventListener('click', () => {
+            document.getElementById('sellAmount').value = currentAvailableAmount;
+        });
 
         // Sell Form Submission
         document.getElementById('sellForm').addEventListener('submit', async (e) => {
