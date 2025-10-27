@@ -81,8 +81,8 @@ h1 {
 
 .panels-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 32px;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 24px;
     margin-bottom: 48px;
 }
 
@@ -92,6 +92,10 @@ h1 {
     border-radius: 20px;
     padding: 40px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.panel.scan-panel {
+    border-top: 3px solid #a78bfa;
 }
 
 .panel.buy-panel {
@@ -119,6 +123,10 @@ h1 {
 
 .holdings-panel h2 {
     color: #60a5fa;
+}
+
+.scan-panel h2 {
+    color: #a78bfa;
 }
 
 .panel-header p {
@@ -592,6 +600,32 @@ td {
                 </form>
             </div>
 
+            <!-- SCAN PANEL -->
+            <div class="panel scan-panel">
+                <div class="panel-header">
+                    <h2>SCAN TOKEN</h2>
+                    <p>AI will analyze the token</p>
+                </div>
+
+                <div class="success-message" id="scanSuccessMessage">
+                    Scan added successfully!
+                </div>
+
+                <form id="scanForm">
+                    <div class="form-group">
+                        <label>Token Ticker</label>
+                        <input type="text" id="scanTicker" placeholder="e.g., BONK, WIF" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Token Address</label>
+                        <input type="text" id="scanTokenAddress" placeholder="Solana token address" required>
+                    </div>
+
+                    <button type="submit" class="submit-btn" style="background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%);">Add Scan</button>
+                </form>
+            </div>
+
             <!-- HOLDINGS PANEL -->
             <div class="panel holdings-panel">
                 <div class="panel-header">
@@ -742,6 +776,52 @@ td {
             }
         });
 
+        // Scan Form Submission
+        document.getElementById('scanForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const ticker = document.getElementById('scanTicker').value.toUpperCase();
+            const tokenAddress = document.getElementById('scanTokenAddress').value;
+
+            try {
+                // Create "analyzing" activity
+                const analyzingActivity = {
+                    type: 'SCAN',
+                    symbol: ticker,
+                    tokenAddress: tokenAddress,
+                    status: 'analyzing',
+                    timestamp: Date.now()
+                };
+
+                await addDoc(collection(db, 'activities'), analyzingActivity);
+                
+                // Show success message
+                const successMsg = document.getElementById('scanSuccessMessage');
+                successMsg.classList.add('show');
+                setTimeout(() => successMsg.classList.remove('show'), 3000);
+
+                // Reset form
+                document.getElementById('scanForm').reset();
+
+                // After 3-5 seconds, create "passing" activity
+                const delay = Math.random() * 2000 + 3000; // 3-5 seconds
+                setTimeout(async () => {
+                    const passingActivity = {
+                        type: 'SCAN',
+                        symbol: ticker,
+                        tokenAddress: tokenAddress,
+                        status: 'passing',
+                        timestamp: Date.now()
+                    };
+                    await addDoc(collection(db, 'activities'), passingActivity);
+                }, delay);
+
+            } catch (error) {
+                console.error('Error adding scan:', error);
+                alert('Error adding scan: ' + error.message);
+            }
+        });
+
         // Buy Form Submission
         document.getElementById('buyForm').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -769,6 +849,16 @@ td {
                 };
 
                 await addDoc(collection(db, 'trades'), trade);
+                
+                // Create activity for terminal
+                const activity = {
+                    type: 'BUY',
+                    symbol: ticker,
+                    amount: amount.toFixed(4),
+                    price: pricePerToken.toFixed(6),
+                    timestamp: Date.now()
+                };
+                await addDoc(collection(db, 'activities'), activity);
                 
                 const successMsg = document.getElementById('buySuccessMessage');
                 successMsg.classList.add('show');
@@ -838,6 +928,26 @@ td {
                 };
 
                 await addDoc(collection(db, 'trades'), trade);
+                
+                // Calculate P&L for activity
+                const position = positions[ticker];
+                let pnl = null;
+                if (position) {
+                    const costBasis = position.avgBuyPrice * amount;
+                    const saleValue = totalValue;
+                    pnl = ((saleValue - costBasis) / costBasis) * 100;
+                }
+                
+                // Create activity for terminal
+                const activity = {
+                    type: 'SELL',
+                    symbol: ticker,
+                    amount: amount.toFixed(4),
+                    price: pricePerToken.toFixed(6),
+                    pnl: pnl,
+                    timestamp: Date.now()
+                };
+                await addDoc(collection(db, 'activities'), activity);
                 
                 sellModal.classList.remove('active');
                 document.getElementById('sellForm').reset();
