@@ -19,41 +19,15 @@ body {
     line-height: 1.6;
 }
 
-/* Ticker Bar */
-.ticker-bar {
+/* Ticker Widget Container */
+.ticker-widget {
     background: linear-gradient(180deg, #0a0f1e 0%, #080d1a 100%);
     border-bottom: 1px solid rgba(99, 179, 237, 0.1);
     padding: 12px 0;
-    overflow: hidden;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-}
-
-.ticker-content {
     display: flex;
-    gap: 60px;
-    animation: scroll 40s linear infinite;
-    white-space: nowrap;
-}
-
-@keyframes scroll {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
-}
-
-.ticker-item {
-    display: inline-flex;
+    justify-content: center;
     align-items: center;
-    gap: 12px;
-    font-size: 13px;
-    font-weight: 500;
-    letter-spacing: 0.3px;
-}
-
-.ticker-item.positive { 
-    color: #10b981;
-}
-.ticker-item.negative { 
-    color: #ef4444;
 }
 
 /* Header */
@@ -569,8 +543,8 @@ td {
     </style>
 </head>
 <body>
-    <div class="ticker-bar">
-        <div class="ticker-content" id="tickerContent"></div>
+    <div class="ticker-widget">
+        <gecko-coin-price-static-headline-widget locale="en" dark-mode="true" transparent-background="true" outlined="true" coin-ids="solana,aster-2,pump-fun,dogwifcoin,chill-house,fartcoin,tokenbot-2,pudgy-penguins,virtual-protocol,game-by-virtuals,hyperliquid" initial-currency="usd"></gecko-coin-price-static-headline-widget>
     </div>
 
     <header>
@@ -701,6 +675,7 @@ td {
         </div>
     </main>
 
+    <script src="https://widgets.coingecko.com/gecko-coin-price-static-headline-widget.js"></script>
     <script type="module">
 // Firebase Configuration
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
@@ -870,7 +845,6 @@ function updateUI() {
     updateStats();
     updatePositionsTable();
     updateTransactionsTable();
-    updateTicker();
     updateLastUpdate();
 }
 
@@ -892,8 +866,8 @@ function updateStats() {
     const trades24h = trades.filter(t => t.timestamp > oneDayAgo);
     const volume24h = trades24h.reduce((sum, t) => sum + t.value, 0);
     
-    // Calculate SOL balance (this would come from actual wallet in production)
-    const solBalance = 100; // Placeholder
+    // Calculate SOL balance - starts with 5 SOL
+    const solBalance = 5;
     
     // Update DOM
     document.getElementById('portfolioValue').textContent = `$${portfolioValue.toFixed(2)}`;
@@ -1011,32 +985,6 @@ function updateTransactionsTable() {
             </tr>
         `;
     }).join('');
-}
-
-function updateTicker() {
-    const tickerContent = document.getElementById('tickerContent');
-    
-    // Create ticker items for SOL and active positions
-    let tickerHTML = `
-        <span class="ticker-item ${solPrice > 0 ? 'positive' : 'negative'}">
-            SOL/USD $${solPrice.toFixed(2)} ${solPrice > 0 ? '▲' : '▼'}
-        </span>
-    `;
-    
-    Object.values(positions).forEach(pos => {
-        const price = tokenPrices[pos.tokenAddress] || pos.avgBuyPrice;
-        const change = ((price - pos.avgBuyPrice) / pos.avgBuyPrice * 100).toFixed(2);
-        const isPositive = change >= 0;
-        
-        tickerHTML += `
-            <span class="ticker-item ${isPositive ? 'positive' : 'negative'}">
-                ${pos.symbol}/USD $${price.toFixed(6)} ${isPositive ? '+' : ''}${change}%
-            </span>
-        `;
-    });
-    
-    // Duplicate for infinite scroll
-    tickerContent.innerHTML = tickerHTML + tickerHTML;
 }
 
 function updateLastUpdate() {
