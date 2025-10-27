@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>APE - Automated Portfolio Engineer</title>
-    <link rel="icon" type="image/png" href="https://cdn.prod.website-files.com/674396c59212c6ea348b24e0/68fec4410510c245fc8b4167_New%20Project%20(63).png">
     <style>
 * {
     margin: 0;
@@ -335,6 +334,160 @@ header {
     border-radius: 16px;
     padding: 28px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.terminal-card {
+    background: linear-gradient(145deg, #161b22 0%, #0d1217 100%);
+    border: 1px solid rgba(99, 179, 237, 0.2);
+    border-radius: 16px;
+    padding: 28px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+}
+
+.terminal-content {
+    background: #000000;
+    border: 1px solid rgba(99, 179, 237, 0.3);
+    border-radius: 8px;
+    padding: 16px;
+    height: 400px;
+    overflow-y: auto;
+    font-family: 'Monaco', 'Courier New', monospace;
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+.terminal-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.terminal-content::-webkit-scrollbar-track {
+    background: rgba(99, 179, 237, 0.05);
+    border-radius: 4px;
+}
+
+.terminal-content::-webkit-scrollbar-thumb {
+    background: rgba(99, 179, 237, 0.3);
+    border-radius: 4px;
+}
+
+.terminal-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(99, 179, 237, 0.5);
+}
+
+.terminal-line {
+    margin-bottom: 8px;
+    display: flex;
+    gap: 8px;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.terminal-timestamp {
+    color: #64748b;
+    font-size: 11px;
+}
+
+.terminal-prefix {
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.terminal-prefix.system {
+    color: #60a5fa;
+}
+
+.terminal-prefix.scan {
+    color: #a78bfa;
+}
+
+.terminal-prefix.buy {
+    color: #10b981;
+}
+
+.terminal-prefix.sell {
+    color: #ef4444;
+}
+
+.terminal-text {
+    color: #e0e7ff;
+}
+
+.terminal-text.analyzing {
+    color: #fbbf24;
+}
+
+.terminal-text.passing {
+    color: #94a3b8;
+}
+
+/* Toast Notifications */
+.toast-container {
+    position: fixed;
+    bottom: 24px;
+    left: 24px;
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.toast {
+    background: linear-gradient(145deg, #161b22 0%, #0d1217 100%);
+    border: 1px solid rgba(99, 179, 237, 0.3);
+    border-radius: 12px;
+    padding: 16px 20px;
+    min-width: 300px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    animation: slideInLeft 0.4s ease, fadeOut 0.4s ease 4.6s;
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-100px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeOut {
+    to {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+}
+
+.toast.buy {
+    border-left: 4px solid #10b981;
+}
+
+.toast.sell {
+    border-left: 4px solid #ef4444;
+}
+
+.toast-icon {
+    font-size: 24px;
+}
+
+.toast-content h4 {
+    color: #e0e7ff;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.toast-content p {
+    color: #94a3b8;
+    font-size: 12px;
 }
 
 table {
@@ -712,31 +865,50 @@ td {
                 </table>
             </div>
 
-            <div class="transactions-card">
-                <div class="card-header">
-                    <h3>RECENT TRANSACTIONS</h3>
-                    <span id="totalTransactions">0 Total</span>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                <div class="transactions-card">
+                    <div class="card-header">
+                        <h3>RECENT TRANSACTIONS</h3>
+                        <span id="totalTransactions">0 Total</span>
+                    </div>
+                    <table class="transactions-table">
+                        <thead>
+                            <tr>
+                                <th>TIME</th>
+                                <th>TYPE</th>
+                                <th>TOKEN</th>
+                                <th>AMOUNT</th>
+                                <th>VALUE</th>
+                                <th>TX</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transactionsBody">
+                            <tr>
+                                <td colspan="6" class="no-data">No transactions yet</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-                <table class="transactions-table">
-                    <thead>
-                        <tr>
-                            <th>TIME</th>
-                            <th>TYPE</th>
-                            <th>TOKEN</th>
-                            <th>AMOUNT</th>
-                            <th>VALUE</th>
-                            <th>TX</th>
-                        </tr>
-                    </thead>
-                    <tbody id="transactionsBody">
-                        <tr>
-                            <td colspan="6" class="no-data">No transactions yet</td>
-                        </tr>
-                    </tbody>
-                </table>
+
+                <div class="terminal-card">
+                    <div class="card-header">
+                        <h3>LIVE TERMINAL</h3>
+                        <span class="status-badge online">OPERATIONAL</span>
+                    </div>
+                    <div class="terminal-content" id="terminalContent">
+                        <div class="terminal-line">
+                            <span class="terminal-timestamp">[00:00:00]</span>
+                            <span class="terminal-prefix system">[SYSTEM]</span>
+                            <span class="terminal-text">APE.CEO initialized and ready...</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
 
     <!-- Console Modal -->
     <div class="modal" id="consoleModal">
@@ -953,6 +1125,81 @@ let trades = [];
 let positions = {};
 let tokenPrices = {};
 let solPrice = 0;
+
+// Toast notification function
+function showToast(type, symbol, details) {
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    
+    const icon = type === 'buy' ? '🟢' : '🔴';
+    const action = type === 'buy' ? 'Bought' : 'Sold';
+    
+    toast.innerHTML = `
+        <div class="toast-icon">${icon}</div>
+        <div class="toast-content">
+            <h4>${action} ${symbol}</h4>
+            <p>${details}</p>
+        </div>
+    `;
+    
+    document.getElementById('toastContainer').appendChild(toast);
+    
+    setTimeout(() => {
+        toast.remove();
+    }, 5000);
+}
+
+// Add to terminal
+function addToTerminal(type, symbol, message, status = '') {
+    const timestamp = new Date().toLocaleTimeString('en-US', { hour12: false });
+    const terminal = document.getElementById('terminalContent');
+    
+    const line = document.createElement('div');
+    line.className = 'terminal-line';
+    
+    let prefixClass = type.toLowerCase();
+    let textClass = status ? status.toLowerCase() : '';
+    
+    line.innerHTML = `
+        <span class="terminal-timestamp">[${timestamp}]</span>
+        <span class="terminal-prefix ${prefixClass}">[${type}]</span>
+        <span class="terminal-text ${textClass}">${message}</span>
+    `;
+    
+    terminal.appendChild(line);
+    terminal.scrollTop = terminal.scrollHeight;
+    
+    // Keep only last 100 lines
+    const lines = terminal.querySelectorAll('.terminal-line');
+    if (lines.length > 100) {
+        lines[0].remove();
+    }
+}
+
+// Listen for new activities
+onSnapshot(query(collection(db, 'activities'), orderBy('timestamp', 'desc'), limit(50)), (snapshot) => {
+    snapshot.docChanges().forEach((change) => {
+        if (change.type === 'added') {
+            const activity = change.doc.data();
+            const symbol = activity.symbol || '';
+            
+            if (activity.type === 'SCAN') {
+                if (activity.status === 'analyzing') {
+                    addToTerminal('SCAN', symbol, `Analyzing $${symbol}...`, 'analyzing');
+                } else if (activity.status === 'passing') {
+                    addToTerminal('SCAN', symbol, `Passing on $${symbol}`, 'passing');
+                }
+            } else if (activity.type === 'BUY') {
+                addToTerminal('BUY', symbol, `Bought ${activity.amount} $${symbol} @ $${activity.price}`);
+                showToast('buy', `$${symbol}`, `${activity.amount} tokens @ $${activity.price}`);
+            } else if (activity.type === 'SELL') {
+                const pnl = activity.pnl ? ` (${activity.pnl >= 0 ? '+' : ''}${activity.pnl.toFixed(2)}%)` : '';
+                addToTerminal('SELL', symbol, `Sold ${activity.amount} $${symbol} @ $${activity.price}${pnl}`);
+                showToast('sell', `$${symbol}`, `${activity.amount} tokens @ $${activity.price}${pnl}`);
+            }
+        }
+    });
+});
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
