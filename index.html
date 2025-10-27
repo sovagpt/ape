@@ -751,7 +751,7 @@ td {
             <span class="status-badge live">LIVE</span>
             <span class="timer" id="timer">00:00:00</span>
             <button class="contract-address" id="contractAddress" title="Click to copy">
-                CONTRACT ADDRESS: TBA
+                CONTRACT ADDRESS: GAFd2PCCfCrLxpbGMUGCkEeLWpo8T5qfUsN2Y2PJpump
             </button>
         </div>
         <div class="header-right">
@@ -1244,7 +1244,7 @@ function setupEventListeners() {
     
     // Pump.fun button
     document.getElementById('pumpBtn').addEventListener('click', () => {
-        window.open('https://pump.fun', '_blank');
+        window.open('https://pump.fun/coin/GAFd2PCCfCrLxpbGMUGCkEeLWpo8T5qfUsN2Y2PJpump', '_blank');
     });
     
     // Solscan button
@@ -1255,7 +1255,7 @@ function setupEventListeners() {
     // Contract address copy
     document.getElementById('contractAddress').addEventListener('click', () => {
         const contractBtn = document.getElementById('contractAddress');
-        const address = 'TBA'; // Replace with actual contract address when available
+        const address = 'GAFd2PCCfCrLxpbGMUGCkEeLWpo8T5qfUsN2Y2PJpump'; // Replace with actual contract address when available
         
         navigator.clipboard.writeText(address).then(() => {
             const originalText = contractBtn.textContent;
