@@ -89,6 +89,33 @@ header {
     font-variant-numeric: tabular-nums;
 }
 
+.contract-address {
+    background: rgba(99, 179, 237, 0.08);
+    border: 1px solid rgba(99, 179, 237, 0.2);
+    color: #94a3b8;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Monaco', monospace;
+    text-transform: uppercase;
+}
+
+.contract-address:hover {
+    background: rgba(99, 179, 237, 0.15);
+    border-color: rgba(99, 179, 237, 0.3);
+    color: #60a5fa;
+}
+
+.contract-address.copied {
+    background: rgba(16, 185, 129, 0.15);
+    border-color: rgba(16, 185, 129, 0.3);
+    color: #10b981;
+}
+
 .header-right {
     display: flex;
     align-items: center;
@@ -552,6 +579,9 @@ td {
             <h1 style="font-size: 0; width: 120px; height: 40px; background-image: url('https://cdn.prod.website-files.com/674396c59212c6ea348b24e0/68febf055c02b3bda0d2f563_APE-CEO-27-10-2025.png'); background-size: contain; background-repeat: no-repeat; background-position: center;">APE</h1>
             <span class="status-badge live">LIVE</span>
             <span class="timer" id="timer">00:00:00</span>
+            <button class="contract-address" id="contractAddress" title="Click to copy">
+                CONTRACT ADDRESS: TBA
+            </button>
         </div>
         <div class="header-right">
             <button class="icon-btn" id="aboutBtn" title="About APE.CEO">
@@ -776,19 +806,19 @@ pub struct TradeData {
                     <h3 style="color: #60a5fa; font-size: 20px; margin-bottom: 16px;">Key Features</h3>
                     <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
                         <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 10px; padding: 20px;">
-                            <h4 style="color: #10b981; font-size: 16px; margin-bottom: 8px;">⚡ Real-Time Execution</h4>
+                            <h4 style="color: #10b981; font-size: 16px; margin-bottom: 8px;">Real-Time Execution</h4>
                             <p style="color: #94a3b8; font-size: 14px;">Sub-second trade execution on Solana's high-performance blockchain</p>
                         </div>
                         <div style="background: rgba(96, 165, 250, 0.1); border: 1px solid rgba(96, 165, 250, 0.3); border-radius: 10px; padding: 20px;">
-                            <h4 style="color: #60a5fa; font-size: 16px; margin-bottom: 8px;">🔒 Transparent Operations</h4>
+                            <h4 style="color: #60a5fa; font-size: 16px; margin-bottom: 8px;">Transparent Operations</h4>
                             <p style="color: #94a3b8; font-size: 14px;">Every trade verifiable on-chain with full transaction history</p>
                         </div>
                         <div style="background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 10px; padding: 20px;">
-                            <h4 style="color: #a78bfa; font-size: 16px; margin-bottom: 8px;">🤖 AI-Powered Analysis</h4>
+                            <h4 style="color: #a78bfa; font-size: 16px; margin-bottom: 8px;">AI-Powered Analysis</h4>
                             <p style="color: #94a3b8; font-size: 14px;">Advanced machine learning models analyze market sentiment and trends</p>
                         </div>
                         <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 10px; padding: 20px;">
-                            <h4 style="color: #ef4444; font-size: 16px; margin-bottom: 8px;">📊 Risk Management</h4>
+                            <h4 style="color: #ef4444; font-size: 16px; margin-bottom: 8px;">Risk Management</h4>
                             <p style="color: #94a3b8; font-size: 14px;">Dynamic position sizing and stop-loss mechanisms protect capital</p>
                         </div>
                     </div>
@@ -881,10 +911,26 @@ function setupEventListeners() {
         window.open('https://solscan.io', '_blank');
     });
     
+    // Contract address copy
+    document.getElementById('contractAddress').addEventListener('click', () => {
+        const contractBtn = document.getElementById('contractAddress');
+        const address = 'TBA'; // Replace with actual contract address when available
+        
+        navigator.clipboard.writeText(address).then(() => {
+            const originalText = contractBtn.textContent;
+            contractBtn.textContent = 'Copied!';
+            contractBtn.classList.add('copied');
+            
+            setTimeout(() => {
+                contractBtn.textContent = originalText;
+                contractBtn.classList.remove('copied');
+            }, 2000);
+        });
+    });
+    
     // Refresh button
     document.getElementById('refreshBtn').addEventListener('click', () => {
-        loadData();
-        updatePrices();
+        location.reload();
     });
     
     // Close modal on outside click
@@ -1038,8 +1084,17 @@ function updateStats() {
     const trades24h = trades.filter(t => t.timestamp > oneDayAgo);
     const volume24h = trades24h.reduce((sum, t) => sum + t.value, 0);
     
-    // Calculate SOL balance - starts with 5 SOL
-    const solBalance = 5;
+    // Calculate SOL balance - starts with 5 SOL, tracks buys/sells
+    let solBalance = 5;
+    trades.forEach(trade => {
+        if (trade.solValue) {
+            if (trade.type === 'BUY') {
+                solBalance -= trade.solValue;
+            } else if (trade.type === 'SELL') {
+                solBalance += trade.solValue;
+            }
+        }
+    });
     
     // Update DOM
     document.getElementById('portfolioValue').textContent = `$${portfolioValue.toFixed(2)}`;
