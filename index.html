@@ -977,38 +977,39 @@ td {
         <div class="modal-content" style="max-width: 900px;">
             <button class="close-btn" id="closeAboutModal">✕</button>
             <div class="modal-header">
-                <h2>About LION.GURU</h2>
+                <h2>About LION</h2>
                 <p>@lionx402</p>
             </div>
             <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
                 <div style="margin-bottom: 32px;">
-                    <h3 style="color: #60a5fa; font-size: 20px; margin-bottom: 16px;">What is LION.GURU?</h3>
+                    <h3 style="color: #60a5fa; font-size: 20px; margin-bottom: 16px;">What is LION?</h3>
                     <p style="color: #cbd5e1; line-height: 1.8; margin-bottom: 16px;">
-                        LION.GURU is an advanced Automated trading system built on Solana, designed to navigate the volatile memecoin market with precision and speed. 
-                        Using cutting-edge AI algorithms and real-time market analysis, APE executes trades 24/7 without human intervention.
+                        LION (Liquid Investment & Onchain Navigator) is an autonomous AI trading agent built on Solana, designed to navigate the volatile memecoin market with precision and speed. 
+                        Using cutting-edge AI algorithms, real-time market analysis, and x402 payment infrastructure, LION executes trades 24/7 without human intervention.
                     </p>
                     <p style="color: #cbd5e1; line-height: 1.8;">
                         The system operates with a starting capital of 5 SOL, employing sophisticated risk management strategies and position sizing algorithms 
-                        to maximize returns while minimizing downside exposure. Every trade is transparent, verifiable on-chain, and tracked in real-time on this dashboard.
+                        to maximize returns while minimizing downside exposure. Every trade is transparent, executed via x402 payments, verifiable on-chain, and tracked in real-time on this dashboard.
                     </p>
                 </div>
 
                 <div style="margin-bottom: 32px;">
                     <h3 style="color: #60a5fa; font-size: 20px; margin-bottom: 16px;">Technical Architecture</h3>
                     <div style="background: rgba(99, 179, 237, 0.05); border: 1px solid rgba(99, 179, 237, 0.2); border-radius: 12px; padding: 24px; margin-bottom: 16px;">
-                        <h4 style="color: #10b981; font-size: 16px; margin-bottom: 12px; font-family: 'Monaco', monospace;">Core Trading Engine</h4>
+                        <h4 style="color: #10b981; font-size: 16px; margin-bottom: 12px; font-family: 'Monaco', monospace;">x402 Payment Integration</h4>
                         <pre style="background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(99, 179, 237, 0.3); border-radius: 8px; padding: 16px; overflow-x: auto; color: #e0e7ff; font-size: 13px; line-height: 1.6;"><code>use solana_sdk::{
     signature::{Keypair, Signer},
     transaction::Transaction,
     pubkey::Pubkey,
 };
 use anchor_lang::prelude::*;
+use x402_sdk::X402Client;
 
 #[program]
-pub mod ape_trading_bot {
+pub mod lion_trading_bot {
     use super::*;
 
-    pub fn execute_trade(
+    pub fn execute_trade_with_x402(
         ctx: Context<ExecuteTrade>,
         token_mint: Pubkey,
         amount: u64,
@@ -1022,17 +1023,31 @@ pub mod ape_trading_bot {
             ErrorCode::ExceedsMaxPosition
         );
         
-        // Execute swap via Jupiter
+        // Create x402 payment request
+        let x402_payment = X402Client::create_payment(
+            &token_mint,
+            amount,
+            ctx.accounts.authority.key(),
+        )?;
+        
+        // Execute swap via Jupiter with x402 settlement
         let swap_ix = create_swap_instruction(
             &token_mint,
             amount,
             max_slippage,
         )?;
         
+        // Bundle instructions for atomic execution
+        let tx = Transaction::new_with_payer(
+            &[swap_ix, x402_payment],
+            Some(&ctx.accounts.authority.key()),
+        );
+        
         // Log trade for transparency
         emit!(TradeExecuted {
             token: token_mint,
             amount,
+            payment_method: "x402",
             timestamp: Clock::get()?.unix_timestamp,
         });
         
@@ -1047,6 +1062,7 @@ pub struct ExecuteTrade<'info> {
     #[account(mut)]
     pub trade_data: Account<'info, TradeData>,
     pub system_program: Program<'info, System>,
+    pub x402_program: Program<'info, X402>,
 }
 
 #[account]
@@ -1055,6 +1071,7 @@ pub struct TradeData {
     pub total_trades: u64,
     pub max_position_size: u64,
     pub win_rate: u16,
+    pub x402_volume: u64,
 }</code></pre>
                     </div>
                 </div>
@@ -1063,8 +1080,8 @@ pub struct TradeData {
                     <h3 style="color: #60a5fa; font-size: 20px; margin-bottom: 16px;">Key Features</h3>
                     <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
                         <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 10px; padding: 20px;">
-                            <h4 style="color: #10b981; font-size: 16px; margin-bottom: 8px;">Real-Time Execution</h4>
-                            <p style="color: #94a3b8; font-size: 14px;">Sub-second trade execution on Solana's high-performance blockchain</p>
+                            <h4 style="color: #10b981; font-size: 16px; margin-bottom: 8px;">x402 Payment Execution</h4>
+                            <p style="color: #94a3b8; font-size: 14px;">Autonomous onchain payments without human intervention using x402 infrastructure</p>
                         </div>
                         <div style="background: rgba(96, 165, 250, 0.1); border: 1px solid rgba(96, 165, 250, 0.3); border-radius: 10px; padding: 20px;">
                             <h4 style="color: #60a5fa; font-size: 16px; margin-bottom: 8px;">Transparent Operations</h4>
@@ -1084,14 +1101,15 @@ pub struct TradeData {
                 <div style="margin-bottom: 24px;">
                     <h3 style="color: #60a5fa; font-size: 20px; margin-bottom: 16px;">Performance Metrics</h3>
                     <p style="color: #cbd5e1; line-height: 1.8;">
-                        LION.GURU tracks comprehensive performance metrics including win rate, profit/loss ratios, Sharpe ratio, maximum drawdown, 
+                        LION tracks comprehensive performance metrics including win rate, profit/loss ratios, Sharpe ratio, maximum drawdown, 
                         and average holding period. The system continuously learns from each trade, adapting its strategies to evolving market conditions.
+                        All trades are executed autonomously via x402 payment infrastructure for true decentralized operation.
                     </p>
                 </div>
 
                 <div style="text-align: center; padding: 24px; background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(96, 165, 250, 0.1) 100%); border-radius: 12px; border: 1px solid rgba(99, 179, 237, 0.2);">
-                    <p style="color: #60a5fa; font-size: 14px; font-weight: 600; margin-bottom: 8px;">Built on Solana | Powered by AI | 100% Transparent</p>
-                    <p style="color: #94a3b8; font-size: 12px;">All trades are executed on-chain and verifiable via Solscan</p>
+                    <p style="color: #60a5fa; font-size: 14px; font-weight: 600; margin-bottom: 8px;">Built on Solana | Powered by x402 | 100% Autonomous</p>
+                    <p style="color: #94a3b8; font-size: 12px;">All trades are executed on-chain via x402 payments and verifiable via Solscan</p>
                 </div>
             </div>
         </div>
